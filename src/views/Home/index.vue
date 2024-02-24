@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import WSectionHeader from "@/components/WSectionHeader.vue";
 import selfIntroduce from "./components/selfIntroduce.vue";
+import articleList from "./components/articleList.vue";
 import { visitorRecord } from "@/api/common.ts";
 import { onMounted } from "vue";
 import { useUserStore } from "@/store/user";
@@ -17,18 +17,10 @@ onMounted(() => {
 </script>
 
 <template>
-  <div>
-    <div class="introduct-self mt20">
-      <selfIntroduce></selfIntroduce>
-      <WSectionHeader :title="'INTRODUCE'"></WSectionHeader>
-    </div>
+  <div class="introduct-self mt20">
+    <selfIntroduce></selfIntroduce>
+    <articleList></articleList>
   </div>
 </template>
 
-<style lang="scss" scoped>
-.introduct-self {
-  @media screen and (max-width: 768px) {
-    display: none;
-  }
-}
-</style>
+<style lang="scss" scoped></style>

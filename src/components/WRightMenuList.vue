@@ -101,7 +101,12 @@ onMounted(() => {});
       <div v-if="activeIndex === 1 && userStore.LoginInfo">
         <WUserInfoForm></WUserInfoForm>
       </div>
-      <div class="stripe"></div>
+      <div class="flex stripe-box">
+        <div>
+          <i class="setup-icon iconfont fz24 mr10">&#xe609;</i>
+        </div>
+        <div class="stripe"></div>
+      </div>
     </el-drawer>
   </div>
 </template>
@@ -109,13 +114,20 @@ onMounted(() => {});
 <style lang="scss" scoped>
 .drawer {
   position: relative;
-  .stripe {
-    width: calc(100% - 40px);
+  .stripe-box {
     position: absolute;
     bottom: 20px;
-    background: url("../../public/stripe.svg") repeat 0 0;
-    background-size: 16px;
-    padding: 16px;
+    width: calc(100% - 40px);
+    .setup-icon {
+      color: #ffffff;
+      font-size: 36px;
+    }
+    .stripe {
+      width: 100%;
+      background: url("../../public/stripe.svg") repeat 0 0;
+      background-size: 16px;
+      padding: 16px;
+    }
   }
 }
 .headerInfo {

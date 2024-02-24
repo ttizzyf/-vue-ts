@@ -13,9 +13,14 @@ const props = defineProps({
 </script>
 
 <template>
-  <div class="flex mt20 mb20">
+  <div class="flex mb20">
     <div class="h64 por pl30 flex-grow flex section-header">
-      <div class="title caps fz16 fw700">// {{ props.title }}</div>
+      <div class="title caps fz16 fw700">
+        <span class="mr10">//</span>
+        <span>
+          {{ props.title }}
+        </span>
+      </div>
     </div>
     <div class="bg-stripe h64"></div>
   </div>
@@ -28,6 +33,10 @@ const props = defineProps({
   z-index: 1;
   @media screen and (max-width: 768px) {
     height: 40px;
+    background-color: $main;
+    color: $seconed;
+    padding-left: 0px;
+    font-size: 16px;
   }
   .title {
     font-family: "Poppins", sans-serif;

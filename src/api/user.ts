@@ -5,7 +5,7 @@ import {
   userEmail,
   responseData,
   emitUserInfo,
-} from "@/types/userInfo";
+} from "@/types/index";
 
 // 用户登录
 export const userLoginAPI = (data: userLogin) => {

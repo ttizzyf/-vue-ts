@@ -3,8 +3,11 @@ import { computed, ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
 // @ts-ignore
 import debounce from "lodash/throttle";
+import "element-plus/theme-chalk/display.css";
+import WSectionHeader from "@/components/WSectionHeader.vue";
+
 const router = useRouter();
-// 是否启用简约屏
+// 是否为处于首页
 const isHomePage = computed(() => {
   if (router.currentRoute.value.name !== "home") {
     return true;
@@ -79,6 +82,11 @@ const EyesMove = () => {
   }
 };
 
+// 跳转页面
+const jumpTo = (url: string) => {
+  window.open(url, "_blank");
+};
+
 onMounted(() => {
   if (!isHomePage.value) {
     EyesMove();
@@ -88,7 +96,7 @@ onMounted(() => {
 
 <template>
   <div class="self-introduce-box">
-    <div class="avatar-box flex jcenter">
+    <div class="avatar-box flex jcenter mb20">
       <div class="avatar flex jcenter pd12">
         <img class="lazy-image h100 w100" src="../../../assets/SVG/head.svg" />
         <div class="leftEye">
@@ -99,70 +107,98 @@ onMounted(() => {
         </div>
       </div>
       <div class="infoBox ml20 caps fw700 fz24">
-        <div class="name mb10">{{ PostName }}</div>
-        <div class="saying fz14 mb10">{{ famousSaying }}</div>
+        <div class="name">{{ PostName }}</div>
+        <div class="fz14">
+          <el-text class="saying" line-clamp="2">
+            {{ famousSaying }}
+          </el-text>
+        </div>
         <div class="iconBox flex">
-          <i class="iconfont fz24 icon mr10 pointer">&#xe686;</i>
-          <i class="iconfont fz24 icon pointer">&#xe673;</i>
+          <i
+            @click="jumpTo('https://gitee.com/yequcailingzhi')"
+            class="iconfont fz24 icon mr10 pointer"
+            >&#xe686;</i
+          >
+          <i
+            @click="jumpTo('https://github.com/ttizzyf')"
+            class="iconfont fz24 icon pointer"
+            >&#xe673;</i
+          >
         </div>
       </div>
     </div>
-    <div class="flex jcenter person-experience-box">
-      <div class="flex jcenter left-svg-box flex start">
-        <div class="self-box pointer">个人简介</div>
-        <!-- <img src="../../../../public/conveyor (1).svg" alt="" /> -->
-      </div>
-      <div class="person-experience flex between mt20 ml20">
-        <div class="grid-item skill flex column pointer">
-          <el-popover :width="300" placement="top" popper-class="popver-class">
-            <template #reference>
-              <el-text line-clamp="1" class="skillName"
+    <WSectionHeader
+      class="WSectionHeader"
+      :title="'introduce'"
+    ></WSectionHeader>
+    <div class="mt20">
+      <el-row :gutter="20">
+        <el-col class="hidden-md-and-down" :lg="2">
+          <div class="self-box pointer">个人简介</div>
+        </el-col>
+        <el-col :sm="12" :md="6" :lg="5">
+          <div class="grid-item skill flex column pointer mb20">
+            <el-popover
+              :width="300"
+              placement="top"
+              popper-class="popver-class"
+            >
+              <template #reference>
+                <el-text line-clamp="1" class="skillName"
+                  >Vue、React、Node、Electron、React
+                  Native、THREE、WebRTC、WebGL、MySQL、HTTP、Uniapp、wx小程序、Linux、移动端适配、Markdown语法、Session、Cookie、Redis、Sequelize、Vite、Webpack
+                </el-text>
+              </template>
+              <template #default
                 >Vue、React、Node、Electron、React
-                Native、THREE、WebRTC、WebGL、MySQL、HTTP、Uniapp、wx小程序、Linux、移动端适配、Markdown语法、Session、Cookie、Redis、Sequelize、Vite、Webpack
-              </el-text>
-            </template>
-            <template #default
-              >Vue、React、Node、Electron、React
-              Native、THREE、WebRTC、WebGL、MySQL、HTTP、Uniapp、wx小程序、Linux、移动端适配、Markdown语法、Session、Cookie、Redis、Sequelize、Vite、Webpack</template
+                Native、THREE、WebRTC、WebGL、MySQL、HTTP、Uniapp、wx小程序、Linux、移动端适配、Markdown语法、Session、Cookie、Redis、Sequelize、Vite、Webpack</template
+              >
+            </el-popover>
+            <div class="line"></div>
+            <div class="skill">个人技术栈</div>
+          </div>
+        </el-col>
+        <el-col :sm="12" :md="6" :lg="5">
+          <div class="grid-item skill flex column pointer mb20">
+            <el-popover
+              :width="300"
+              placement="top"
+              popper-class="popver-class"
             >
-          </el-popover>
-          <div class="line"></div>
-          <div class="skill">个人技术栈</div>
-        </div>
-        <div class="grid-item skill flex column pointer">
-          <el-popover :width="300" placement="top" popper-class="popver-class">
-            <template #reference>
-              <el-text line-clamp="1" class="skillName"
-                >Vue3、TS、Node.js、Vite、Sequelize、Vite、Pinia、Mysql、Redis、Element-Plus
-              </el-text>
-            </template>
-            <template #default
-              >Vue3、TS、Node.js、Vite、Sequelize、Vite、Pinia、Mysql、Redis、Element-Plus</template
-            >
-          </el-popover>
-          <div class="line"></div>
-          <div class="skill">本项目框架</div>
-        </div>
-        <div class="grid-item flex column experience pointer">
-          <div>2+</div>
-          <div class="line"></div>
-          <div>实战经验</div>
-        </div>
-        <div class="grid-item project flex column pointer">
-          <div>20+</div>
-          <div class="line"></div>
-          <div>项目经验</div>
-        </div>
-      </div>
+              <template #reference>
+                <el-text line-clamp="1" class="skillName"
+                  >Vue3、TS、Node.js、Vite、Sequelize、Vite、Pinia、Mysql、Redis、Element-Plus
+                </el-text>
+              </template>
+              <template #default
+                >Vue3、TS、Node.js、Vite、Sequelize、Vite、Pinia、Mysql、Redis、Element-Plus</template
+              >
+            </el-popover>
+            <div class="line"></div>
+            <div class="skill">本项目框架</div>
+          </div>
+        </el-col>
+        <el-col :sm="12" :md="6" :lg="5">
+          <div class="grid-item flex column experience pointer mb20">
+            <div>2+</div>
+            <div class="line"></div>
+            <div>实战经验</div>
+          </div>
+        </el-col>
+        <el-col :sm="12" :md="6" :lg="5">
+          <div class="grid-item project flex column pointer mb20">
+            <div>20+</div>
+            <div class="line"></div>
+            <div>项目经验</div>
+          </div>
+        </el-col>
+      </el-row>
     </div>
   </div>
 </template>
 
 <style lang="scss" scoped>
 .self-introduce-box {
-  @media screen and (max-width: 768px) {
-    display: none;
-  }
   .avatar-box {
     .avatar {
       position: relative;
@@ -201,6 +237,10 @@ onMounted(() => {
     }
     .infoBox {
       width: calc(100% - 128px);
+      height: 128px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
       .name {
         color: $seconed;
         font-family: "Poppins", sans-serif;
@@ -210,45 +250,40 @@ onMounted(() => {
       }
     }
     .iconBox {
+      height: 30px;
       .icon {
         color: $seconed;
       }
     }
   }
-  .person-experience-box {
-    height: 155px;
-    .left-svg-box {
-      margin-top: 20px;
-      height: calc(100% - 20px);
-      width: 64px;
-      .self-box {
-        height: 135px;
-        width: 64px;
-        text-align: center;
-        padding: 18px;
-        border-radius: 10px;
-        background-color: $seconed;
-      }
-      // img {
-      //   transform: rotate(180deg);
-      // }
-    }
-    .person-experience {
-      width: calc(100% - 64px);
-      gap: 20px;
-      flex-wrap: wrap;
-      .grid-item {
-        flex: 0 0 calc(25% - 20px);
-        background-color: #fff;
-        padding: 20px;
-        width: 100%;
-        border-radius: 10px;
-        .skill {
-          .skillName {
-            color: #000;
-          }
-        }
-      }
+
+  .self-box {
+    height: 135px;
+    width: 64px;
+    text-align: center;
+    padding: 18px;
+    border-radius: 10px;
+    background-color: $seconed;
+  }
+}
+.WSectionHeader {
+  @media screen and (min-width: 768px) {
+    display: none;
+  }
+}
+.grid-item {
+  flex: 0 0 calc(25% - 20px);
+  background-color: #fff;
+  padding: 20px;
+  width: 100%;
+  border-radius: 10px;
+  transition: all 0.3s linear;
+  &:hover {
+    transform: translateY(-4px) scale(1.02);
+  }
+  .skill {
+    .skillName {
+      color: #000;
     }
   }
 }

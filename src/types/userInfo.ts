@@ -3,14 +3,6 @@ export interface userEmail {
   email: string;
 }
 
-// 响应数据
-export interface responseData<T = any> {
-  status: number;
-  message: string;
-  time: number;
-  data: T;
-}
-
 // 用户信息
 export interface GenerateThemeColor extends userEmail {
   userId: Number; // 用户id

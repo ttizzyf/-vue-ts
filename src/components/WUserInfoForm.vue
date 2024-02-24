@@ -14,9 +14,9 @@ const userForm = ref({
 
 // 获取用户信息
 const getUserInfo = () => {
-  userForm.value.email = userStore.LoginInfo.email;
-  userForm.value.nickname = userStore.LoginInfo.nickname;
-  userForm.value.website = userStore.LoginInfo.website;
+  userForm.value.email = userStore.LoginInfo?.email;
+  userForm.value.nickname = userStore.LoginInfo?.nickname;
+  userForm.value.website = userStore.LoginInfo?.website;
 };
 
 const isEdit = ref(false);
@@ -63,7 +63,7 @@ const userRules = {
 };
 
 const clearForm = () => {
-  userInfoDOM.value.clearValidate();
+  userInfoDOM.value?.clearValidate();
   getUserInfo();
   isEdit.value = false;
 };
