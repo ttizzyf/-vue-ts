@@ -1,6 +1,6 @@
 export * from "./userInfo";
 export * from "./common";
-export * from "./article";
+export * from "./home";
 
 // 响应数据
 export interface responseData<T = any> {

@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import WSectionHeader from "@/components/WSectionHeader.vue";
-import { getArticleList } from "@/api/article.ts";
+import { getArticleList } from "@/api/home.ts";
 import { ref, onMounted, Ref } from "vue";
 import { articleItem } from "@/types/index";
 import { dayjs } from "element-plus";
@@ -28,7 +28,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div>
+  <div class="mb20">
     <WSectionHeader :title="'Technical Articles'"></WSectionHeader>
     <div class="article-box">
       <div class="side-stripe"></div>
@@ -44,20 +44,22 @@ onMounted(() => {
               </el-text>
             </div>
             <div class="article-tip">
-              <span class="mr10">
+              <span class="mr5 fz12">
                 {{ dayjs(item.createdAt).format("YYYY-MM-DD HH:mm:ss") }} 发布
               </span>
-              <span class="mr10">
-                <i class="iconfont mr5">&#xec8c;</i>
-                <span>{{ item.likeNum }}</span>
-              </span>
-              <span class="mr10">
-                <i class="iconfont mr5">&#xe663;</i>
-                <span>{{ item.viewNum }}</span>
-              </span>
               <span>
-                <i class="iconfont mr5">&#xe608;</i>
-                <span>{{ item.messageNum }}</span>
+                <span class="mr5 fz12">
+                  <i class="iconfont mr5">&#xec8c;</i>
+                  <span class="fz12">{{ item.likeNum }}</span>
+                </span>
+                <span class="mr5">
+                  <i class="iconfont mr5 fz12">&#xe663;</i>
+                  <span>{{ item.viewNum }}</span>
+                </span>
+                <span>
+                  <i class="iconfont mr5 fz12">&#xe608;</i>
+                  <span class="fz12">{{ item.messageNum }}</span>
+                </span>
               </span>
             </div>
           </div>
@@ -147,3 +149,4 @@ onMounted(() => {
   }
 }
 </style>
+@/api/home

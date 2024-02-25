@@ -1,6 +1,8 @@
 <script lang="ts" setup>
 import selfIntroduce from "./components/selfIntroduce.vue";
 import articleList from "./components/articleList.vue";
+import recentComments from "./components/recentComments.vue";
+import messageBoard from "./components/messageBoard.vue";
 import { visitorRecord } from "@/api/common.ts";
 import { onMounted } from "vue";
 import { useUserStore } from "@/store/user";
@@ -20,6 +22,8 @@ onMounted(() => {
   <div class="introduct-self mt20">
     <selfIntroduce></selfIntroduce>
     <articleList></articleList>
+    <recentComments></recentComments>
+    <messageBoard></messageBoard>
   </div>
 </template>
 
