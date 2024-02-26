@@ -2,15 +2,24 @@
 import WHeader from "./components/w_header/index.vue";
 import WMain from "./components/w_main/index.vue";
 import WFooter from "./components/w_footer/index.vue";
-import { Application } from "@splinetool/runtime";
+// import { Application } from "@splinetool/runtime";
 import { onMounted, onBeforeUnmount } from "vue";
 import { useRouter } from "vue-router";
 const router = useRouter();
 
 const watchScroll = () => {};
 
+// const getCanvas = () => {
+//   const canvas = document.getElementById("canvas3d");
+//   if (canvas !== null && canvas instanceof HTMLCanvasElement) {
+//     const spline = new Application(canvas);
+//     spline.load("https://prod.spline.design/QtjyKwneLbc7H6gb/scene.splinecode");
+//   }
+// };
+
 onMounted(() => {
   window.addEventListener("scroll", watchScroll);
+  // getCanvas();
 });
 
 onBeforeUnmount(() => {
@@ -20,6 +29,9 @@ onBeforeUnmount(() => {
 
 <template>
   <div class="mainControl">
+    <!-- <div class="canvas-box">
+      <canvas id="canvas3d"></canvas>
+    </div> -->
     <div class="common-layout">
       <el-container>
         <el-header>
@@ -38,13 +50,22 @@ onBeforeUnmount(() => {
 
 <style lang="scss" scoped>
 .mainControl {
+  position: relative;
   padding: 0 20px;
   display: flex;
   flex-direction: column;
   align-items: center;
   height: 1800px;
+  .canvas-box {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100vh;
+    width: 100vw;
+  }
 }
 .common-layout {
+  z-index: 5;
   background-color: $main;
   max-width: 1140px;
   width: 100%;
