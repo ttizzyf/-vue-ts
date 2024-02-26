@@ -33,3 +33,8 @@ export interface commentItem {
     title: string;
   };
 }
+
+// 留言板参数
+export interface messageItem extends commentItem {
+  replyInfo: Array<messageItem>;
+}

@@ -1,14 +1,41 @@
 <script lang="ts" setup>
 import WSectionHeader from "@/components/WSectionHeader.vue";
 import storage from "@/utils/storage";
-import { ref, onMounted } from "vue";
+import { ref, onMounted, Ref } from "vue";
+import { getMessageList } from "@/api/home.ts";
+import { messageItem } from "@/types/home";
+import { TimeUtils } from "@/utils/time";
 
 let userInfo = ref();
 
-onMounted(() => {
+// 获取本地用户信息
+const getUserInfo = () => {
   let info = storage.get("userInfo");
   userInfo.value = info;
   console.log(userInfo.value);
+};
+
+const commentData = ref({
+  commentContent: "",
+  params: {
+    pageSize: 5,
+    pageNum: 1,
+  },
+});
+
+// 留言列表
+const commentsList: Ref<Array<messageItem> | null> = ref(null);
+
+// 获取评论列表
+const getcommentsListAPI = async () => {
+  const res = await getMessageList(commentData.value.params);
+  commentsList.value = res.data.data.data;
+  console.log(commentsList.value);
+};
+
+onMounted(() => {
+  getUserInfo();
+  getcommentsListAPI();
 });
 </script>
 
@@ -21,14 +48,61 @@ onMounted(() => {
     <div class="message-list-box">
       <div class="message-from">
         <div class="userInfo-header flex">
-          <img :src="userInfo?.avatar" alt="" />
+          <img
+            :src="
+              userInfo?.avatar ||
+              '../../../../public/微信图片_20231214185224.jpg'
+            "
+            alt=""
+          />
+
           <div class="userInfo">
-            <div class="name">{{ userInfo?.nickname }}</div>
+            <div class="name">{{ userInfo?.nickname || "未登录" }}</div>
             <div class="email">{{ userInfo?.platform }}</div>
           </div>
         </div>
-        <div class=""></div>
+        <div class="comments-form mt20">
+          <el-input
+            type="textarea"
+            placeholder="请输入评论内容"
+            v-model="commentData.commentContent"
+            maxlength="500"
+            show-word-limit
+            :rows="6"
+          >
+          </el-input>
+          <div class="mt20 center">
+            <div class="animationBtn mr20" style="width: 144px">SEND</div>
+            <div class="animationBtn" style="width: 144px">LOGIN</div>
+          </div>
+        </div>
       </div>
+      <ul class="comments-list">
+        <li
+          class="comment-item"
+          v-for="item in commentsList"
+          :key="item.messageId"
+        >
+          <el-avatar :size="40" :src="item.userInfo.avatar" />
+          <div class="comment-info">
+            <span class="title">
+              <span class="name pr10 fw700 fz16">{{
+                item.userInfo.nickname
+              }}</span>
+              <span class="time fz12">{{
+                TimeUtils.formatRelativeTime(item.createdAt)
+              }}</span>
+            </span>
+            <span class="content fz14">
+              {{ item.content }}
+            </span>
+          </div>
+        </li>
+        <li class="load-more">
+          <i class="iconfont">&#xe667;</i>
+          查看更多
+        </li>
+      </ul>
     </div>
   </div>
 </template>
@@ -41,9 +115,17 @@ onMounted(() => {
   letter-spacing: 1px;
 }
 .message-list-box {
+  display: flex;
+  flex-wrap: wrap;
+  @media screen and (max-width: 968px) {
+    flex-direction: column;
+  }
   .message-from {
     width: 60%;
     padding: 1rem;
+    @media screen and (max-width: 968px) {
+      width: 100%;
+    }
     .userInfo-header {
       gap: 1em;
       img {
@@ -61,6 +143,70 @@ onMounted(() => {
           font-size: 0.7rem;
           color: #a09f9f;
         }
+      }
+    }
+    .comments-form {
+      :deep(.el-textarea__inner) {
+        background-color: transparent !important;
+        box-shadow: none !important;
+        border-bottom: 1px solid #ffffff;
+        color: #ffffff !important;
+        border-radius: 0 !important;
+      }
+      :deep(.el-textarea .el-input__count) {
+        background-color: transparent !important;
+      }
+
+      :deep(.el-textarea__inner::-webkit-scrollbar) {
+        width: 2px;
+        height: 2px;
+      }
+      :deep(.el-textarea__inner::-webkit-scrollbar-thumb) {
+        border-radius: 3px;
+        -moz-border-radius: 3px;
+        -webkit-border-radius: 3px;
+        background-color: #c3c3c3;
+      }
+      :deep(.el-textarea__inner::-webkit-scrollbar-track) {
+        background-color: transparent;
+      }
+    }
+  }
+  .comments-list {
+    width: 40%;
+    padding: 1.2rem 0 0 2rem;
+    @media screen and (max-width: 968px) {
+      width: 100%;
+    }
+    .comment-item {
+      text-align: center;
+      border-radius: 5px px;
+      display: flex;
+      justify-content: flex-start;
+      overflow: hidden;
+      margin-bottom: 1.5rem;
+      background-position: top center;
+      color: #ffffff;
+      .comment-info {
+        width: calc(100% - 60px);
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        flex-wrap: wrap;
+        padding: 0 5px 0 1.2rem;
+        font-size: 1rem;
+        text-align: left;
+      }
+    }
+    .load-more {
+      text-align: center;
+      color: #adadad;
+      cursor: pointer;
+      transition: all 0.3s linear;
+      font-weight: 700;
+      &:hover {
+        color: $primary;
       }
     }
   }

@@ -8,3 +8,7 @@ export const getArticleList = (params: reqPage) => {
 export const getCommentsList = (params: reqPage) => {
   return request.get<responseData>("/w1/blog/blog_comment/list", params);
 };
+// 获取留言列表
+export const getMessageList = (params: reqPage) => {
+  return request.get<responseData>("/w1/blog/blog_comment/Messagelist", params);
+};

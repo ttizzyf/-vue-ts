@@ -2,18 +2,10 @@
 import WHeader from "./components/w_header/index.vue";
 import WMain from "./components/w_main/index.vue";
 import WFooter from "./components/w_footer/index.vue";
+import { Application } from "@splinetool/runtime";
 import { onMounted, onBeforeUnmount } from "vue";
-
-// const showHeader = ref(true);
-
-// const state = reactive({
-//   lastScrollTop: 0,
-//   show: {
-//     menuList: true,
-//   },
-// });
-// 头部元素DOM获取
-// const wHeaderBox = ref();
+import { useRouter } from "vue-router";
+const router = useRouter();
 
 const watchScroll = () => {};
 
@@ -36,7 +28,7 @@ onBeforeUnmount(() => {
         <el-main>
           <WMain></WMain>
         </el-main>
-        <el-footer>
+        <el-footer v-if="router.currentRoute.value.path === '/home'">
           <WFooter></WFooter>
         </el-footer>
       </el-container>

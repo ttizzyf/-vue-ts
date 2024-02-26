@@ -149,4 +149,3 @@ onMounted(() => {
   }
 }
 </style>
-@/api/home
