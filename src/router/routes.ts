@@ -65,14 +65,14 @@ const frameIn = [
           title: "博客详情",
         },
       },
-      {
-        path: "/games",
-        name: "games",
-        component: () => import("views/Games/index.vue"),
-        meta: {
-          title: "游戏区",
-        },
-      },
+      // {
+      //   path: "/games",
+      //   name: "games",
+      //   component: () => import("views/Games/index.vue"),
+      //   meta: {
+      //     title: "游戏区",
+      //   },
+      // },
       {
         path: "/messageBoard",
         name: "messageBoard",

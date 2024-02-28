@@ -12,7 +12,7 @@ const menuItems = [
   { name: "HOME", id: "home", path: "/home" },
   { name: "ABOUT", id: "about", path: "/about" },
   { name: "BLOG", id: "blog", path: "/blog" },
-  { name: "GAMES", id: "games", path: "/games" },
+  // { name: "GAMES", id: "games", path: "/games" },
   { name: "MESSAGEBOARD", id: "messageBoard", path: "/messageBoard" },
 ];
 
@@ -69,6 +69,10 @@ const activateMenuItem = (
     menusAction.page = item.id;
   }
 };
+
+defineExpose({
+  activateMenuItem,
+});
 
 // 在组件挂载时获取所有菜单项的引用
 onMounted(() => {

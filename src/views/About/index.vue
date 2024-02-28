@@ -1,7 +1,9 @@
-<script lang="ts" setup></script>
+<script lang="ts" setup>
+import Wheader from "@/components/Wheader.vue";
+</script>
 
 <template>
-  <div>关于我</div>
+  <Wheader></Wheader>
 </template>
 
 <style lang="scss" scoped></style>

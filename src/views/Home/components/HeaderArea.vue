@@ -55,7 +55,6 @@ const isHomePage = computed(() => {
   font-size: 5vw;
   color: $seconed;
   letter-spacing: 2em;
-  @include link-colors($main, $seconed, $primary);
   @media screen and (max-width: 768px) {
     display: none;
   }
