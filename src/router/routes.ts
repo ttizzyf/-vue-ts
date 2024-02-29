@@ -58,7 +58,7 @@ const frameIn = [
         },
       },
       {
-        path: "/blogDetail",
+        path: "/blogDetail/:id",
         name: "blogDetail",
         component: () => import("views/blogDetail/index.vue"),
         meta: {
