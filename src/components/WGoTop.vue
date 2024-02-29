@@ -108,7 +108,7 @@ onUnmounted(() => {
   border-radius: 50%;
   transform: translateX(-50%) translateY(-50%);
   bottom: 20px;
-  right: 20px;
+  right: 0px;
   -webkit-transition: all 300ms linear;
   transition: all 300ms linear;
   pointer-events: auto;
