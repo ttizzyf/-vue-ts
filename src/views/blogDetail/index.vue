@@ -1,10 +1,26 @@
 <script lang="ts" setup>
-import { getArticleDetails, viewAriticle } from "@/api/article.ts";
-import { ref, onMounted } from "vue";
+import {
+  getArticleDetails,
+  viewAriticle,
+  getCommentsListByArticleId,
+  createComment,
+  updateBlogCommentLikeOrOppose,
+} from "@/api/article.ts";
+import { ref, onMounted, Ref } from "vue";
 import { useRouter } from "vue-router";
 import { useMenusStore } from "@/store/menu";
 import { TimeUtils } from "@/utils/time";
 import WMarkdownRenderer from "@/components/WMarkdownRenderer.vue";
+import WSectionHeader from "@/components/WSectionHeader.vue";
+import WCommentVue from "@/components/WComment.vue";
+import { commentItem, createCommentType } from "@/types/index.ts";
+import { useUserStore } from "@/store/user";
+import { WMessage, WNotification } from "@/utils/toast";
+import { setCookie } from "@/utils/cookies.ts";
+import { useEventListener } from "@vueuse/core";
+import { visitorRecord } from "@/api/common.ts";
+
+const userStroe = useUserStore();
 const menusAction = useMenusStore();
 const router = useRouter();
 
@@ -13,7 +29,7 @@ const articleDetails = ref();
 
 // 文章id
 const articleId = ref();
-
+// 是否打开目录
 const isOpenDirectory = ref(false);
 
 // 获取文章详情
@@ -28,23 +44,135 @@ const back = (route: string) => {
   if (route === "/home") {
     menusAction.menuIndex = 0;
   } else {
-    menusAction.menuIndex = 2;
+    menusAction.menuIndex = 1;
   }
   router.push({
     path: route,
   });
 };
 
+const articleCommentsParams = ref({
+  pageSize: 10,
+  pageNum: 1,
+  relatedArticleId: "",
+});
+
+const commentList: Ref<Array<commentItem>> = ref([]);
+
+// 根据文章id获取评论列表
+const getCommentsListByArticleIdAPI = async () => {
+  const res = await getCommentsListByArticleId(articleCommentsParams.value);
+  commentList.value = res.data.data.rows;
+};
+
+// 是否打开评论输入框
+const isOpenComment = ref(false);
+
+// 评论输入框
+const commentInput = ref("");
+
+// 打开评论表单
+const writeComment = () => {
+  isOpenComment.value = !isOpenComment.value;
+  if (!isOpenComment.value) {
+    commentInput.value = "";
+  }
+};
+
+// 发送评论
+const sendComment = async () => {
+  if (!userStroe.LoginInfo) {
+    menusAction.changeDrawer();
+    WMessage.error("请先登录");
+    return;
+  }
+  console.log(userStroe.LoginInfo);
+  if (commentInput.value.length === 0) {
+    return WMessage.error("评论内容不能为空");
+  }
+  const res = await createComment({
+    relatedArticleId: router.currentRoute.value.params.id as string,
+    content: commentInput.value,
+  });
+  console.log(res);
+  getCommentsListByArticleIdAPI();
+  commentInput.value = "";
+  isOpenComment.value = false;
+};
+
+// 点赞评论
+const likeComment = (id: string) => {
+  updateBlogCommentLikeOrOppose({ id, likeOrOppose: "like" })
+    .then((res) => {
+      if (res.data.status) {
+        setCookie(`comment-like-${id}`, true, 30);
+        getCommentsListByArticleIdAPI();
+      }
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+  console.log("点赞");
+};
+
+// 反对评论
+const opposeComment = (id: string) => {
+  updateBlogCommentLikeOrOppose({ id, likeOrOppose: "Oppose" })
+    .then((res) => {
+      if (res.data.status) {
+        setCookie(`comment-oppose-${id}`, true, 30);
+        getCommentsListByArticleIdAPI();
+      }
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
+
+// 回复评论
+const replyComment = async (info: createCommentType) => {
+  const res = await createComment({
+    ...info,
+    relatedArticleId: articleCommentsParams.value.relatedArticleId,
+  });
+  if (res.data.status) {
+    WNotification.success("回复成功");
+    getCommentsListByArticleIdAPI();
+  }
+  console.log("回复");
+};
+
+// 记录访客
+const visitorRecordAPI = () => {
+  // 记录访客
+  let userInfo = {
+    type: 0,
+    nickname: userStroe.LoginInfo?.nickname || "visitor",
+  };
+  visitorRecord(userInfo);
+};
+
 onMounted(() => {
   articleId.value = router.currentRoute.value.params.id;
+  articleCommentsParams.value.relatedArticleId = articleId.value;
   getArticleDetailsAPI(articleId.value);
   // 访客记录
   viewAriticle({ id: articleId.value });
+  // 获取评论列表
+  getCommentsListByArticleIdAPI();
+  // 监测屏幕宽度
+  useEventListener(window, "resize", () => {
+    if (window.innerWidth < 768) {
+      isOpenDirectory.value = false;
+    }
+  });
+  // 记录访客
+  visitorRecordAPI();
 });
 </script>
 
 <template>
-  <div class="article-details-box pt40">
+  <div class="article-details-box pt40 pb20">
     <div class="details-box">
       <div class="article-details-header">
         <i class="iconfont pointer mr10" @click="back('/home')"> &#xe707;</i>
@@ -57,8 +185,8 @@ onMounted(() => {
           {{ articleDetails?.title ? articleDetails.title : "" }}
         </div>
         <div class="tip">
-          <span class="mr5"> 目录 </span>
-          <span class="mr5">
+          <span class="mr5 directory"> 目录 </span>
+          <span class="mr5 directory">
             <el-switch
               v-model="isOpenDirectory"
               class="ml-2"
@@ -117,6 +245,64 @@ onMounted(() => {
           回复原文章的地址，我会给您删除此文章，给您带来不便请您谅解！
         </p>
       </div>
+      <WSectionHeader :title="'评论'"></WSectionHeader>
+      <div class="mb10">
+        <div class="comment-box mb40 flex column jcenter">
+          <span
+            class="write-comment pointer primary-hover"
+            @click="writeComment"
+          >
+            写评论
+            <i class="iconfont ml5">&#xe618;</i>
+          </span>
+          <div v-if="isOpenComment" class="conment-input-box">
+            <el-input
+              v-model="commentInput"
+              :rows="6"
+              type="textarea"
+              placeholder="留言内容"
+              maxlength="500"
+              show-word-limit
+            />
+            <div class="mt20 center">
+              <div
+                :class="[
+                  'animationBtn',
+                  'mr20',
+                  'btnDisabled',
+                  { disabled: !userStroe.LoginInfo },
+                ]"
+                style="width: 144px"
+                @click="sendComment"
+              >
+                SEND
+              </div>
+              <div
+                class="animationBtn"
+                v-if="!userStroe.LoginInfo"
+                style="width: 144px"
+                @click="menusAction.changeDrawer"
+              >
+                LOGIN
+              </div>
+            </div>
+          </div>
+        </div>
+        <template v-if="commentList?.length > 0">
+          <WCommentVue
+            v-for="item in commentList"
+            :key="item.messageId"
+            :comment="item"
+            @like="likeComment"
+            @oppose="opposeComment"
+            @reply="replyComment"
+          ></WCommentVue>
+        </template>
+        <div v-else class="empty-box flex column jcenter">
+          <img src="../../assets/imgs/empty.png" alt="" />
+          <span>当前评论为空</span>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -174,6 +360,11 @@ onMounted(() => {
         display: flex;
         align-items: center;
         color: #afafaf;
+        .directory {
+          @media screen and (max-width: 768px) {
+            display: none;
+          }
+        }
       }
     }
     .stripe {
@@ -210,6 +401,34 @@ onMounted(() => {
       }
       a {
         color: $primary;
+      }
+    }
+    .comment-box {
+      .write-comment {
+        font-size: 1.5rem;
+        color: #afafaf;
+      }
+      .conment-input-box {
+        width: 100%;
+        padding: 1.25rem 2.5rem;
+        @media screen and (max-width: 1140px) {
+          padding: 1.25rem 1.25rem;
+        }
+        .btnDisabled {
+          color: #000000;
+          background-color: #ffffff !important;
+        }
+      }
+    }
+    .empty-box {
+      height: 200px;
+      img {
+        height: 190px;
+        width: auto;
+      }
+      span {
+        color: #afafaf;
+        font-size: 0.9rem;
       }
     }
   }

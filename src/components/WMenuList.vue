@@ -10,7 +10,7 @@ const menusAction = useMenusStore();
 // 定义菜单项数据
 const menuItems = [
   { name: "HOME", id: "home", path: "/home" },
-  { name: "ABOUT", id: "about", path: "/about" },
+  // { name: "ABOUT", id: "about", path: "/about" },
   { name: "BLOG", id: "blog", path: "/blog" },
   // { name: "GAMES", id: "games", path: "/games" },
   { name: "MESSAGEBOARD", id: "messageBoard", path: "/messageBoard" },

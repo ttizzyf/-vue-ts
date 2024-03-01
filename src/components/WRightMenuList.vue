@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, Ref, watch } from "vue";
+import { ref, Ref, watch } from "vue";
 // import { useRouter } from "vue-router";
 import "@/styles/index.scss";
 import { isMobile } from "store/isMobile.ts";
@@ -8,15 +8,11 @@ import WSideMenu from "./WSideMenu.vue";
 import WLoginAndRegisiter from "./WLoginAndRegisiter.vue";
 import WUserInfoForm from "./WUserInfoForm.vue";
 import { useUserStore } from "../store/user.ts";
+import { useMenusStore } from "@/store/menu.ts";
 import WUploadAvatar from "./WUploadAvatar.vue";
+const menusStore = useMenusStore();
 const userStore = useUserStore();
 const mobile = isMobile();
-// 抽屉控件
-const isShowDrawer = ref(false);
-// 打开抽屉
-const changeDrawer = () => {
-  isShowDrawer.value = true;
-};
 // 根据是否登录展示不同菜单
 const tabsItems: Ref = ref([
   { name: "menu", id: "menu" },
@@ -50,20 +46,13 @@ watch(
   },
   { immediate: true, deep: true }
 );
-
-// 向外暴露是否打开抽屉
-defineExpose({
-  changeDrawer,
-});
-
-onMounted(() => {});
 </script>
 
 <template>
   <div>
     <el-drawer
       :size="mobile.isMobileTerminal ? 270 : 400"
-      v-model="isShowDrawer"
+      v-model="menusStore.isShowDrawer"
       direction="ltr"
       :show-close="false"
       class="drawer"

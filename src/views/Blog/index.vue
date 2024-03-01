@@ -1,11 +1,12 @@
 <script lang="ts" setup>
 import Wheader from "@/components/Wheader.vue";
 import { getArticleList } from "@/api/home.ts";
-import { ref, watch, onMounted, computed, Ref, onUnmounted } from "vue";
+import { ref, watch, onMounted, computed, Ref } from "vue";
 import { articleItem, articleList } from "@/types";
 import { TimeUtils } from "@/utils/time";
 import { Search } from "@element-plus/icons-vue";
 import { useRouter } from "vue-router";
+import { useEventListener } from "@vueuse/core";
 const router = useRouter();
 const category = ref([
   {
@@ -125,19 +126,10 @@ const wheelEventHandler = (e: any) => {
   }
 };
 
-const wheelMove = () => {
-  window.addEventListener("wheel", wheelEventHandler);
-};
-
 onMounted(() => {
   moveRange.value = articleListBox.value.offsetHeight / 3;
   articleListBoxHeight.value = articleListBox.value.offsetHeight;
-  wheelMove();
-});
-
-onUnmounted(() => {
-  // 移除监听
-  window.removeEventListener("wheel", wheelEventHandler);
+  useEventListener(window, "wheel", wheelEventHandler);
 });
 </script>
 

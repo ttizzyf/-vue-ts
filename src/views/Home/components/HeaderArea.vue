@@ -1,20 +1,16 @@
 <script lang="ts" setup>
 import { ref, computed } from "vue";
-import WRightMenuList from "@/components/WRightMenuList.vue";
 import WMenuList from "@/components/WMenuList.vue";
 import { useRouter } from "vue-router";
 import { isMobile } from "store/isMobile.ts";
+import { useMenusStore } from "@/store/menu.ts";
 import ChangeColor from "libs/changeTheme.ts";
+
+const menusStore = useMenusStore();
 const router = useRouter();
 const mobileWidth = isMobile();
-// 右侧菜单DOM
-const rightMenuDOM = ref();
 // blog名称
 const BlogName = ref(import.meta.env.VITE_APP_WEB_TITLE);
-// 展示左侧菜单
-const showMenu = () => {
-  rightMenuDOM.value.changeDrawer();
-};
 // 是否启用简约屏
 const isHomePage = computed(() => {
   if (router.currentRoute.value.name !== "home") {
@@ -31,7 +27,9 @@ const isHomePage = computed(() => {
     <div v-if="!isHomePage" class="BlogName mb20 caps">{{ BlogName }}</div>
     <!-- 博客菜单栏 -->
     <div class="tabsColumn">
-      <i class="iconfont icon menuIcon" @click="showMenu">&#xe612;</i>
+      <i class="iconfont icon menuIcon pointer" @click="menusStore.changeDrawer"
+        >&#xe612;</i
+      >
       <div
         v-show="mobileWidth.isMobileTerminal || isHomePage"
         class="ChangeColor ml20 pointer colorBox"
@@ -44,8 +42,6 @@ const isHomePage = computed(() => {
         <WMenuList></WMenuList>
       </el-scrollbar>
     </div>
-    <!-- 右侧菜单 -->
-    <WRightMenuList ref="rightMenuDOM"></WRightMenuList>
   </div>
 </template>
 

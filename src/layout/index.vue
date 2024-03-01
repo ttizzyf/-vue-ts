@@ -2,6 +2,7 @@
 import WHeader from "./components/w_header/index.vue";
 import WMain from "./components/w_main/index.vue";
 import WFooter from "./components/w_footer/index.vue";
+import WRightMenuList from "@/components/WRightMenuList.vue";
 import { Application } from "@splinetool/runtime";
 import { onMounted, onBeforeUnmount } from "vue";
 import { useRouter } from "vue-router";
@@ -50,6 +51,7 @@ onBeforeUnmount(() => {
         </el-footer>
       </el-container>
     </div>
+    <WRightMenuList></WRightMenuList>
   </div>
 </template>
 
