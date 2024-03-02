@@ -18,7 +18,7 @@ export interface createCommentType {
   messagePid?: string;
   toUserId?: string;
   isSendEmail?: number;
-  relatedArticleId: string;
+  relatedArticleId?: string;
   content: string;
 }
 

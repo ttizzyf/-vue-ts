@@ -4,7 +4,12 @@ import {
   commentParams,
   createCommentType,
   articleLikeType,
+  reqPage,
 } from "@/types/index.ts";
+
+interface MessageListType extends reqPage {
+  messageId?: string;
+}
 
 // 文件上传
 export const getArticleDetails = (data: { id: string }) => {
@@ -32,4 +37,9 @@ export const createComment = (data: createCommentType) => {
 // 文章评论点赞或反对
 export const updateBlogCommentLikeOrOppose = (data: articleLikeType) => {
   return request.post<responseData>("/w1/blog/blog_comment/likeOrOppose", data);
+};
+
+// 获取留言列表
+export const getMessageList = (params: MessageListType) => {
+  return request.get<responseData>("/w1/blog/blog_comment/Messagelist", params);
 };

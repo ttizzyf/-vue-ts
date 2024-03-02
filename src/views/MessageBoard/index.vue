@@ -2,6 +2,7 @@
 import { ref } from "vue";
 import Wheader from "@/components/Wheader.vue";
 import privateLetter from "./components/privateLetter.vue";
+import messageBoard from "./components/messageBoard.vue";
 
 const srcList = ref(["../../../public/wx.jpg"]);
 </script>
@@ -42,6 +43,7 @@ const srcList = ref(["../../../public/wx.jpg"]);
         </el-card>
       </div>
       <privateLetter></privateLetter>
+      <messageBoard></messageBoard>
     </div>
   </div>
 </template>

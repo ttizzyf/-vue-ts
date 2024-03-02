@@ -1,14 +1,16 @@
 <script setup lang="ts">
 import "@/styles/index.scss";
 import { dayjs } from "element-plus";
-import { reactive, ref } from "vue";
+import { reactive, ref, watch } from "vue";
 import { getCookie } from "@/utils/cookies.ts";
 import { WMessage } from "@/utils/toast";
 import { useUserStore } from "@/store/user";
 import { useMenusStore } from "@/store/menu";
 
 const userStore = useUserStore();
+
 const menuStore = useMenusStore();
+
 const props = defineProps({
   comment: {
     type: Object,
@@ -16,6 +18,10 @@ const props = defineProps({
     default: () => [],
   },
 });
+
+// 是否是留言
+const isMessage = ref(false);
+
 // 展示列表
 const srcList = ref([]);
 
@@ -29,16 +35,17 @@ const state = reactive({
 
 const emits = defineEmits(["modify", "like", "oppose", "delete", "reply"]);
 // 喜欢
-const likeComment = (id: string) => {
+const likeComment = (id: string, faId: string) => {
   if (state.likeActive(id)) return;
-  emits("like", id);
+  emits("like", id, faId);
 };
 // 反对
-const opposeComment = (id: string) => {
+const opposeComment = (id: string, faId: string) => {
   if (state.opposeActive(id)) return;
-  emits("oppose", id);
+  emits("oppose", id, faId);
 };
-const replyMessage = () => {
+// 回复消息
+const replyMessage = (faId: string) => {
   if (!userStore.LoginInfo) {
     WMessage.error("请先登录");
     menuStore.changeDrawer();
@@ -47,9 +54,10 @@ const replyMessage = () => {
   if (replyMessageParams.value.content.length === 0) {
     return WMessage.error("评论内容不能为空");
   }
-  emits("reply", replyMessageParams.value);
+  emits("reply", replyMessageParams.value, faId);
   cancelReplyMessage();
 };
+
 // 回复留言内容及id
 const replyMessageParams = ref({
   // 回复目标消息id
@@ -88,6 +96,17 @@ const cancelReplyMessage = () => {
   };
   replyMessageId.value = "";
 };
+
+watch(
+  props.comment,
+  () => {
+    if (!props.comment.relatedArticleId) {
+      isMessage.value = true;
+    }
+    console.log(props.comment.replyInfo);
+  },
+  { immediate: true, deep: true }
+);
 </script>
 
 <template>
@@ -133,23 +152,22 @@ const cancelReplyMessage = () => {
           >
           <span
             :class="{ active: state.likeActive(props.comment.messageId) }"
-            @click="likeComment(props.comment.messageId)"
+            @click="
+              likeComment(props.comment.messageId, props.comment.messageId)
+            "
           >
             赞同({{ props.comment.likeNum || 0 }})
           </span>
           <span
             :class="{ active: state.opposeActive(props.comment.messageId) }"
-            @click="opposeComment(props.comment.messageId)"
+            @click="
+              opposeComment(props.comment.messageId, props.comment.messageId)
+            "
           >
             反对({{ props.comment.opposeNum || 0 }})
           </span>
           <!-- 判断是否为评论页面 -->
-          <span
-            v-if="!props.comment.articleInfo"
-            @click="openReplyMessageBox(props.comment)"
-          >
-            回复
-          </span>
+          <span @click="openReplyMessageBox(props.comment)"> 回复 </span>
         </div>
         <div
           class="reply-message-box mt20"
@@ -180,7 +198,7 @@ const cancelReplyMessage = () => {
           </div>
           <div class="flex mt10">
             <div
-              @click="replyMessage"
+              @click="replyMessage(props.comment.messageId)"
               class="animationBtn pointer bg-primary mr20 w200"
             >
               回复消息
@@ -195,7 +213,7 @@ const cancelReplyMessage = () => {
     <div class="comment-nested">
       <div
         class="reply-box mb20"
-        v-for="item in props.comment.children"
+        v-for="item in props.comment.replyInfo"
         :key="item.messageId"
       >
         <div class="comment-inner-avatar pointer mr10">
@@ -231,13 +249,13 @@ const cancelReplyMessage = () => {
             >
             <span
               :class="{ active: state.likeActive(item.messageId) }"
-              @click="likeComment(item.messageId)"
+              @click="likeComment(item.messageId, props.comment.messageId)"
             >
               赞同({{ item.likeNum || 0 }})
             </span>
             <span
               :class="{ active: state.opposeActive(item.messageId) }"
-              @click="opposeComment(item.messageId)"
+              @click="opposeComment(item.messageId, props.comment.messageId)"
             >
               反对({{ item.opposeNum || 0 }})
             </span>
@@ -259,7 +277,7 @@ const cancelReplyMessage = () => {
               v-model="replyMessageParams.content"
               :rows="6"
               type="textarea"
-              placeholder="留言内容"
+              :placeholder="isMessage ? '留言内容' : '评论内容'"
               maxlength="500"
               show-word-limit
             />
@@ -277,8 +295,8 @@ const cancelReplyMessage = () => {
             </div>
             <div class="flex mt10">
               <div
-                @click="replyMessage"
-                class="animationBtn pointer bg-primary mr20 w200"
+                @click="replyMessage(props.comment.messageId)"
+                class="animationBtn pointer hidden bg-primary mr20 reply-btn"
               >
                 回复消息
               </div>
@@ -343,6 +361,11 @@ const cancelReplyMessage = () => {
   width: 50%;
   @media screen and (max-width: 768px) {
     width: 100%;
+  }
+}
+.reply-btn {
+  @media screen and (max-width: 768px) {
+    padding: 0px 0px !important;
   }
 }
 :deep(.el-textarea__inner) {

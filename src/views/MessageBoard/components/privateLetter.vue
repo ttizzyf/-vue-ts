@@ -73,10 +73,10 @@ const resetForm = () => {
           ></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" size="mini" @click="submitForm"
+          <el-button type="primary" size="small" @click="submitForm"
             >提交</el-button
           >
-          <el-button size="mini" @click="resetForm">重置</el-button>
+          <el-button size="small" @click="resetForm">重置</el-button>
         </el-form-item>
         <el-form-item>
           <div class="from-tro">

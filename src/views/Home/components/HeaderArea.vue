@@ -104,4 +104,15 @@ const isHomePage = computed(() => {
     // overflow: hidden;
   }
 }
+.ChangeColor {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 32px;
+  width: 32px;
+  color: $primary;
+  .icon {
+    font-size: 24px;
+  }
+}
 </style>

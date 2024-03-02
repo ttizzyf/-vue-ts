@@ -139,7 +139,6 @@ const replyComment = async (info: createCommentType) => {
     WNotification.success("回复成功");
     getCommentsListByArticleIdAPI();
   }
-  console.log("回复");
 };
 
 // 记录访客
