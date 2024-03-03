@@ -27,7 +27,7 @@ const srcList = ref(["../../../public/wx.jpg"]);
           <p>😸邮箱:1374144742@qq.com</p>
           <p>😸留言:下方留言板</p>
           <div class="image center column mt16 mb16">
-            <div class="mb16">欢迎访问我的博客!</div>
+            <div class="mb16">如有需要,可通过下方扫码联系我!</div>
             <el-image
               fit="cover"
               style="width: 100px"

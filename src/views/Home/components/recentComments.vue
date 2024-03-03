@@ -3,6 +3,9 @@ import WSectionHeader from "@/components/WSectionHeader.vue";
 import { getCommentsList } from "@/api/home.ts";
 import { ref, onMounted, Ref } from "vue";
 import { commentItem, reqPage } from "@/types";
+import { useRouter } from "vue-router";
+
+const router = useRouter();
 
 interface commentsListData {
   params: reqPage;
@@ -23,6 +26,16 @@ const getCommentsListAPI = async () => {
   console.log(commentsListData.value.list);
 };
 
+// 点击文章跳转详情页
+const articleDetail = (id: string) => {
+  router.push({
+    name: "blogDetail",
+    params: {
+      id,
+    },
+  });
+};
+
 onMounted(() => {
   getCommentsListAPI();
 });
@@ -35,6 +48,7 @@ onMounted(() => {
       <div
         class="comments-item"
         v-for="item in commentsListData.list"
+        @click="articleDetail(item.articleInfo.id)"
         :key="item.messageId"
       >
         <div class="author flex">

@@ -9,3 +9,8 @@ export const uploadFile = (data: any) => {
 export const visitorRecord = (data: visitor) => {
   return request.post<responseData>("/w1/sys/visitor/record", data);
 };
+
+// 私信作者
+export const privateLetter = (data: { email: string; content: string }) => {
+  return request.post<responseData>("/w1/sys/letter/create", data);
+};

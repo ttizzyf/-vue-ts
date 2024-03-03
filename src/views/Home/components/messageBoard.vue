@@ -1,19 +1,20 @@
 <script lang="ts" setup>
 import WSectionHeader from "@/components/WSectionHeader.vue";
-import storage from "@/utils/storage";
 import { ref, onMounted, Ref } from "vue";
 import { getMessageList } from "@/api/home.ts";
 import { messageItem } from "@/types/home";
 import { TimeUtils } from "@/utils/time";
+import { useRouter } from "vue-router";
+import { useMenusStore } from "@/store/menu";
+import { WMessage } from "@/utils/toast";
+import { createComment } from "@/api/article.ts";
+import { useUserStore } from "@/store/user";
 
-let userInfo = ref();
+const menusStore = useMenusStore();
 
-// 获取本地用户信息
-const getUserInfo = () => {
-  let info = storage.get("userInfo");
-  userInfo.value = info;
-  console.log(userInfo.value);
-};
+const userStore = useUserStore();
+
+const router = useRouter();
 
 const commentData = ref({
   commentContent: "",
@@ -33,8 +34,36 @@ const getcommentsListAPI = async () => {
   console.log(commentsList.value);
 };
 
+// 跳转到留言板界面
+const messageBoard = () => {
+  router.push("/messageBoard");
+  menusStore.menuIndex = 2;
+};
+
+// 发送留言
+const snedMessage = async () => {
+  if (!userStore.LoginInfo) {
+    WMessage.error("用户未登录,请先登录");
+    menusStore.changeDrawer();
+    return;
+  }
+  if (commentData.value.commentContent.length === 0) {
+    WMessage.error("评论内容不能为空");
+    return;
+  }
+  const res = await createComment({
+    content: commentData.value.commentContent,
+  });
+  console.log(res);
+  if (res.data.status) {
+    getcommentsListAPI();
+    WMessage.success("感谢留下你的足迹");
+    commentData.value.commentContent = "";
+    return;
+  }
+};
+
 onMounted(() => {
-  getUserInfo();
   getcommentsListAPI();
 });
 </script>
@@ -50,15 +79,17 @@ onMounted(() => {
         <div class="userInfo-header flex">
           <img
             :src="
-              userInfo?.avatar ||
+              userStore.LoginInfo?.avatar ||
               '../../../../public/微信图片_20231214185224.jpg'
             "
             alt=""
           />
 
           <div class="userInfo">
-            <div class="name">{{ userInfo?.nickname || "未登录" }}</div>
-            <div class="email">{{ userInfo?.platform }}</div>
+            <div class="name">
+              {{ userStore.LoginInfo?.nickname || "未登录" }}
+            </div>
+            <div class="email">{{ userStore.LoginInfo?.platform }}</div>
           </div>
         </div>
         <div class="comments-form mt20">
@@ -72,8 +103,21 @@ onMounted(() => {
           >
           </el-input>
           <div class="mt20 center">
-            <div class="animationBtn mr20" style="width: 144px">SEND</div>
-            <div class="animationBtn" style="width: 144px">LOGIN</div>
+            <div
+              @click="snedMessage"
+              class="animationBtn mr20"
+              style="width: 144px"
+            >
+              SEND
+            </div>
+            <div
+              v-if="!userStore.LoginInfo"
+              @click="menusStore.changeDrawer"
+              class="animationBtn"
+              style="width: 144px"
+            >
+              LOGIN
+            </div>
           </div>
         </div>
       </div>
@@ -98,7 +142,7 @@ onMounted(() => {
             </span>
           </div>
         </li>
-        <li class="load-more">
+        <li class="load-more" @click="messageBoard">
           <i class="iconfont">&#xe667;</i>
           查看更多
         </li>

@@ -1,4 +1,9 @@
-<script lang="ts" setup></script>
+<script lang="ts" setup>
+// 跳转页面
+const jumpTo = (url: string) => {
+  window.open(url, "_blank");
+};
+</script>
 
 <template>
   <div class="bottom-box">
@@ -7,8 +12,15 @@
       <div class="tabsLine">
         <span class="caps mr20"> // </span>
         <span class="nav pointer"> MANAGE </span>
-        <span class="nav pointer"> GITHUB </span>
-        <span class="nav pointer"> GITEE </span>
+        <span class="nav pointer" @click="jumpTo('https://github.com/ttizzyf')">
+          GITHUB
+        </span>
+        <span
+          class="nav pointer"
+          @click="jumpTo('https://gitee.com/yequcailingzhi')"
+        >
+          GITEE
+        </span>
       </div>
     </div>
   </div>

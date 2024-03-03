@@ -23,8 +23,6 @@ const props = defineProps({
 const isMessage = ref(false);
 
 // 展示列表
-const srcList = ref([]);
-
 const state = reactive({
   show: {
     replies: false,
@@ -53,6 +51,10 @@ const replyMessage = (faId: string) => {
   }
   if (replyMessageParams.value.content.length === 0) {
     return WMessage.error("评论内容不能为空");
+  }
+  if (userStore.LoginInfo.roleInfo.roleAuth !== "SUPER-ADMIN") {
+    replyMessageParams.value.isSendEmail = 0;
+    WMessage.error("抱歉,您权限不足开启邮件回复");
   }
   emits("reply", replyMessageParams.value, faId);
   cancelReplyMessage();
@@ -103,7 +105,6 @@ watch(
     if (!props.comment.relatedArticleId) {
       isMessage.value = true;
     }
-    console.log(props.comment.replyInfo);
   },
   { immediate: true, deep: true }
 );
@@ -118,21 +119,22 @@ watch(
     </div>
     <div class="comment-inner">
       <div class="comment-inner-avatar pointer mr10">
-        <el-image
-          fit="cover"
-          :hide-on-click-modal="true"
-          :preview-src-list="srcList"
-          :src="props.comment.userInfo.avatar"
-          @click="srcList.push(props.comment.userInfo.avatar as never)"
-          @close="srcList = []"
-          :initial-index="0"
-          :min-scale="2"
-        />
+        <el-avatar :size="32" :src="props.comment.userInfo.avatar" />
       </div>
       <div class="comment-inner-content fz14 por">
         <div class="comment-content-author warp column start">
           <div class="comment-content-author-name textColor fw700 fz14 lh1 mb5">
             {{ props.comment.userInfo.nickname }}
+            <span
+              v-if="
+                props.comment.userInfo.roleId ===
+                '037a2f7d-206b-4e26-8461-b518d83be6c5'
+              "
+            >
+              <el-tag type="success" effect="dark" size="small" round>
+                管理员
+              </el-tag>
+            </span>
           </div>
           <div class="fz12 textColor">
             在{{
@@ -184,7 +186,10 @@ watch(
             maxlength="500"
             show-word-limit
           />
-          <div class="mt10 flex">
+          <div
+            v-if="userStore.LoginInfo.roleInfo.roleAuth === 'SUPER-ADMIN'"
+            class="mt10 flex"
+          >
             <span class="mr10 textColor">发送邮件:</span>
             <el-switch
               v-model="replyMessageParams.isSendEmail"
@@ -217,21 +222,34 @@ watch(
         :key="item.messageId"
       >
         <div class="comment-inner-avatar pointer mr10">
-          <el-image
-            :hide-on-click-modal="true"
-            :preview-src-list="srcList"
-            @click="srcList.push(props.comment.userInfo.avatar as never)"
-            @close="srcList = []"
-            :initial-index="0"
-            :min-scale="2"
-            fit="cover"
-            :src="item.userInfo.avatar"
-          />
+          <el-avatar :size="32" :src="item.userInfo.avatar" />
         </div>
         <div class="comment-inner-content fz14 por">
           <div class="comment-content-author warp column start">
             <span class="textColor fw700 fz14 lh1 mb5">
-              {{ item.userInfo.nickname }}@{{ item.toUserInfo.nickname }}
+              {{ item.userInfo.nickname }}
+              <span
+                v-if="
+                  item.userInfo.roleId ===
+                  '037a2f7d-206b-4e26-8461-b518d83be6c5'
+                "
+              >
+                <el-tag type="success" effect="dark" size="small" round>
+                  管理员
+                </el-tag>
+              </span>
+              @
+              {{ item.toUserInfo.nickname }}
+              <span
+                v-if="
+                  item.toUserInfo.roleId ===
+                  '037a2f7d-206b-4e26-8461-b518d83be6c5'
+                "
+              >
+                <el-tag type="success" effect="dark" size="small" round>
+                  管理员
+                </el-tag>
+              </span>
             </span>
             <div class="fz12 textColor">
               在{{ dayjs(item.createdAt).format("YYYY-MM-DD HH:mm:ss") }}说
@@ -281,7 +299,10 @@ watch(
               maxlength="500"
               show-word-limit
             />
-            <div class="mt10 flex">
+            <div
+              v-if="userStore.LoginInfo.roleInfo.roleAuth === 'SUPER-ADMIN'"
+              class="mt10 flex"
+            >
               <span class="mr10 textColor">发送邮件:</span>
               <el-switch
                 v-model="replyMessageParams.isSendEmail"
@@ -352,10 +373,10 @@ watch(
   }
 }
 .comment-inner-avatar {
-  height: 40px;
-  width: 40px;
+  height: 2rem;
+  width: 2rem;
   border-radius: 50%;
-  overflow: hidden;
+  // overflow: hidden;
 }
 .reply-message-box {
   width: 50%;

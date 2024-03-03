@@ -1,5 +1,7 @@
 <script lang="ts" setup>
 import { ref } from "vue";
+import { privateLetter } from "@/api/common";
+import { WMessage } from "@/utils/toast";
 
 // 提交表单
 const FormData = ref({
@@ -15,7 +17,7 @@ const rules = ref({
     {
       type: "email",
       message: "请输入正确的邮箱地址",
-      trigger: ["blur", "change"],
+      trigger: "blur",
     },
   ],
   content: [{ required: true, message: "请输入您的留言内容", trigger: "blur" }],
@@ -24,11 +26,17 @@ const rules = ref({
 const formDom = ref();
 // 提交表单
 const submitForm = () => {
-  formDom.value.validate((valid: boolean) => {
+  formDom.value.validate(async (valid: boolean) => {
     if (valid) {
       loading.value = true;
+      const res = await privateLetter(FormData.value);
+      if (res.data.status) {
+        WMessage.success(res.data.message);
+        resetForm();
+      }
+      loading.value = false;
     } else {
-      console.log("error submit!!");
+      WMessage.error("数据内容错误");
       return false;
     }
   });
@@ -59,7 +67,7 @@ const resetForm = () => {
           <el-input
             v-model="FormData.email"
             maxlength="32"
-            placeholder="请输入您的邮箱"
+            placeholder="请输入邮箱"
             show-word-limit
           ></el-input>
         </el-form-item>
@@ -67,7 +75,7 @@ const resetForm = () => {
           <el-input
             type="textarea"
             v-model="FormData.content"
-            placeholder="请输入您的私信"
+            placeholder="请输入私信内容"
             maxlength="255"
             show-word-limit
           ></el-input>

@@ -75,9 +75,12 @@ const marginRightValues = computed(() => {
     // 根据 rotateValue 和 index 调整 margin-right 值
     const adjustedIndex = index - rotateValue.value;
     // 距离根据盒子高度计算
-    if (adjustedIndex === 0) return articleListBoxHeight.value / 3;
-    if (adjustedIndex === 1) return articleListBoxHeight.value / 2;
-    if (adjustedIndex === 2) return articleListBoxHeight.value / 3;
+    if (adjustedIndex === 0 && !smallScreenWidth.value)
+      return articleListBoxHeight.value / 3;
+    if (adjustedIndex === 1 && !smallScreenWidth.value)
+      return articleListBoxHeight.value / 2;
+    if (adjustedIndex === 2 && !smallScreenWidth.value)
+      return articleListBoxHeight.value / 3;
     return 0;
   });
 });
@@ -110,7 +113,7 @@ const articleDetail = (item: articleItem) => {
     },
   });
 };
-
+// 鼠标滚动事件处理
 const wheelEventHandler = (e: any) => {
   if (
     articleList.value.length < articleListData.value.total &&
@@ -126,7 +129,17 @@ const wheelEventHandler = (e: any) => {
   }
 };
 
+// 是否为小屏幕
+const smallScreenWidth = ref(window.innerWidth < 1140);
+
 onMounted(() => {
+  console.log(smallScreenWidth.value);
+  // 监测屏幕宽度
+  useEventListener(window, "resize", () => {
+    moveRange.value = articleListBox.value.offsetHeight / 3;
+    articleListBoxHeight.value = articleListBox.value.offsetHeight;
+    smallScreenWidth.value = window.innerWidth > 1140 ? false : true;
+  });
   moveRange.value = articleListBox.value.offsetHeight / 3;
   articleListBoxHeight.value = articleListBox.value.offsetHeight;
   useEventListener(window, "wheel", wheelEventHandler);
@@ -136,7 +149,7 @@ onMounted(() => {
 <template>
   <div class="blog-list-box pt20">
     <Wheader></Wheader>
-    <div class="content-box flex">
+    <div class="content-box">
       <div class="category-list">
         <div class="tabs-list flex column jcenter">
           <span class="category-title caps tac mb20"
@@ -173,6 +186,9 @@ onMounted(() => {
           class="central-circle"
           :style="{
             transform: `rotate(${rotateValue * 18}deg)`,
+            height:`${moveRange * 3}px`,
+            width:`${moveRange * 3}px`,
+            right:`-${moveRange * 1.5}px`,
             'background-image': `${
               category[
                 !articleListData.params.category
@@ -184,7 +200,11 @@ onMounted(() => {
         ></div>
         <div
           class="list-box flex column"
-          :style="{ transform: `translate(0, ${-rotateValue * moveRange}px)` }"
+          :style="{
+            transform: `translate(0, ${
+              smallScreenWidth ? -rotateValue * 180 : -rotateValue * moveRange
+            }px)`,
+          }"
         >
           <div
             v-for="(item, index) in articleList"
@@ -192,19 +212,14 @@ onMounted(() => {
             @click="articleDetail(item)"
             class="article center pointer"
             :style="{
-              transform: `translate(${-marginRightValues[index]}px,0) scale(${
-                index - 1 === rotateValue ? '1.5' : '.8'
+              transform: `translate(${
+                smallScreenWidth ? 0 : -marginRightValues[index]
+              }px,${smallScreenWidth ? 0 : 0}px) scale(${
+                smallScreenWidth ? 1 : index - 1 === rotateValue ? '1.5' : '.8'
               })`,
-              height: `${moveRange}px`,
+              height: `${smallScreenWidth ? 160 : moveRange}px`,
             }"
           >
-            <div class="image-box">
-              <el-image
-                style="width: 100%; height: 100%"
-                :src="item.cover"
-                fit="cover"
-              />
-            </div>
             <div class="article-info-box">
               <div class="w100 h32">
                 <el-text size="large" style="color: #cccccc" line-clamp="1">
@@ -234,6 +249,13 @@ onMounted(() => {
                 </span>
               </div>
             </div>
+            <div class="image-box">
+              <el-image
+                style="width: 100%; height: 100%"
+                :src="item.cover"
+                fit="cover"
+              />
+            </div>
           </div>
         </div>
       </div>
@@ -247,11 +269,19 @@ onMounted(() => {
   .content-box {
     position: relative;
     height: calc(100vh - 70px);
+    display: flex;
+    @media screen and (max-width: 1140px) {
+      flex-direction: column;
+    }
   }
   .category-list {
     position: relative;
     height: 100%;
     width: 30%;
+    @media screen and (max-width: 1140px) {
+      height: 35%;
+      width: 100%;
+    }
     .tabs-list {
       width: 100%;
       position: absolute;
@@ -294,13 +324,14 @@ onMounted(() => {
     width: 70%;
     height: 100%;
     overflow: hidden;
+    @media screen and (max-width: 1140px) {
+      height: 65%;
+      width: 100%;
+    }
 
     .central-circle {
-      width: calc(100vh - 70px);
-      height: calc(100vh - 70px);
       position: absolute;
       border-radius: 50%;
-      right: calc((-50vh + 35px));
       transform-origin: center;
       transition: all 0.3s linear;
     }
@@ -308,16 +339,29 @@ onMounted(() => {
       position: absolute;
       right: 0;
       transition: all 0.3s linear;
+      @media screen and (max-width: 1140px) {
+        width: 100%;
+      }
       .article {
         position: relative;
         height: 200px;
         width: 200px;
         transition: all 0.3s linear;
+        @media screen and (max-width: 1140px) {
+          width: 100%;
+          display: flex;
+          margin-bottom: 20px;
+        }
         .image-box {
           position: absolute;
-          height: 200px;
-          width: 260px;
+          height: 12.5rem;
+          width: 16.25rem;
           z-index: 2;
+          @media screen and (max-width: 1140px) {
+            position: unset;
+            height: 100%;
+            width: 40%;
+          }
         }
         .article-info-box {
           display: flex;
@@ -337,6 +381,13 @@ onMounted(() => {
             0px 0px 17.9px rgba(255, 255, 255, 0.042),
             0px 0px 33.4px rgba(255, 255, 255, 0.051),
             0px 0px 80px rgba(255, 255, 255, 0.07);
+          @media screen and (max-width: 1140px) {
+            position: unset;
+            width: 60%;
+            height: 100%;
+            transform: translate(0, 0);
+          }
+
           .article-info {
             position: absolute;
             bottom: 10px;

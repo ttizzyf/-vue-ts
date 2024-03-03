@@ -4,6 +4,7 @@ import { getArticleList } from "@/api/home.ts";
 import { ref, onMounted, Ref } from "vue";
 import { articleItem } from "@/types/index";
 import { dayjs } from "element-plus";
+import router from "@/router";
 // 文章列表数据
 const articleData = ref({
   params: {
@@ -22,6 +23,16 @@ const getArticleListAPI = async () => {
   console.log(articleList.value);
 };
 
+// 前往文章详情页
+const articleDetail = (id: string) => {
+  router.push({
+    name: "blogDetail",
+    params: {
+      id: id,
+    },
+  });
+};
+
 onMounted(() => {
   getArticleListAPI();
 });
@@ -33,7 +44,12 @@ onMounted(() => {
     <div class="article-box">
       <div class="side-stripe"></div>
       <div class="article-list-box">
-        <div class="article-item" v-for="item in articleList" :key="item.id">
+        <div
+          class="article-item"
+          @click="articleDetail(item.id)"
+          v-for="item in articleList"
+          :key="item.id"
+        >
           <div class="article-content">
             <div class="article-name mb10">
               {{ item.title }}
