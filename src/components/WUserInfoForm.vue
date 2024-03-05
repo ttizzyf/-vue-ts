@@ -6,6 +6,8 @@ import { emitUserInfoAPI } from "api/user.ts";
 import "@/styles/index.scss";
 const userStore = useUserStore();
 
+const emits = defineEmits(["openCreateFriend"]);
+
 const userForm = ref({
   email: "",
   nickname: "",
@@ -86,6 +88,11 @@ const btnChangeOrSave = async () => {
   }
 };
 
+// 创建友链按钮
+const createFriendLink = () => {
+  emits("openCreateFriend");
+};
+
 onMounted(() => {});
 </script>
 
@@ -124,9 +131,10 @@ onMounted(() => {});
         </div>
       </el-form-item>
       <div class="flex jcenter">
-        <div class="animationBtn pointer" @click="btnChangeOrSave">
+        <div class="animationBtn pointer mr10" @click="btnChangeOrSave">
           {{ isEdit ? "保存" : "修改" }}
         </div>
+        <div @click="createFriendLink" class="animationBtn pointer">友链</div>
       </div>
     </el-form>
   </div>

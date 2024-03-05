@@ -10,10 +10,9 @@ const menusAction = useMenusStore();
 // 定义菜单项数据
 const menuItems = [
   { name: "HOME", id: "home", path: "/home" },
-  // { name: "ABOUT", id: "about", path: "/about" },
   { name: "BLOG", id: "blog", path: "/blog" },
-  // { name: "GAMES", id: "games", path: "/games" },
   { name: "MESSAGEBOARD", id: "messageBoard", path: "/messageBoard" },
+  { name: "FRIENDLINK", id: "friendLink", path: "/friendLink" },
 ];
 
 // 响应式数据，用于存储当前鼠标悬停的选项的索引、底纹的位置和宽度，以及默认激活的菜单项索引

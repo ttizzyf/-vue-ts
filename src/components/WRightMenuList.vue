@@ -7,6 +7,7 @@ import { isMobile } from "store/isMobile.ts";
 import WSideMenu from "./WSideMenu.vue";
 import WLoginAndRegisiter from "./WLoginAndRegisiter.vue";
 import WUserInfoForm from "./WUserInfoForm.vue";
+import WcreateFriend from "./WcreateFriend.vue";
 import { useUserStore } from "../store/user.ts";
 import { useMenusStore } from "@/store/menu.ts";
 import WUploadAvatar from "./WUploadAvatar.vue";
@@ -26,6 +27,13 @@ const activeIndex = ref(0);
 // 选择菜单
 const activeMenuItem = (index: number) => {
   activeIndex.value = index;
+};
+
+// 是否打开友链表单
+const isOpenFriend = ref(false);
+
+const openCreateFriend = () => {
+  isOpenFriend.value = true;
 };
 
 // 展示菜单内容
@@ -81,14 +89,17 @@ watch(
           {{ item.name }}
         </div>
       </div>
-      <div v-if="activeIndex === 0" class="w-side-menu mt20">
+      <div v-if="activeIndex === 0 && !isOpenFriend" class="w-side-menu mt20">
         <WSideMenu></WSideMenu>
       </div>
       <div v-if="activeIndex === 1 && !userStore.LoginInfo">
         <WLoginAndRegisiter></WLoginAndRegisiter>
       </div>
-      <div v-if="activeIndex === 1 && userStore.LoginInfo">
-        <WUserInfoForm></WUserInfoForm>
+      <div v-if="activeIndex === 1 && userStore.LoginInfo && !isOpenFriend">
+        <WUserInfoForm @openCreateFriend="openCreateFriend"></WUserInfoForm>
+      </div>
+      <div v-if="activeIndex === 1 && userStore.LoginInfo && isOpenFriend">
+        <WcreateFriend @layout="isOpenFriend = false"></WcreateFriend>
       </div>
       <div class="flex stripe-box">
         <div>

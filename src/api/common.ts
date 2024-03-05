@@ -1,5 +1,5 @@
 import request from "utils/request.ts";
-import { visitor, responseData } from "@/types/index.ts";
+import { visitor, responseData, friendLink } from "@/types/index.ts";
 // 文件上传
 export const uploadFile = (data: any) => {
   return request.post<responseData>("/w1/common/upload", data);
@@ -13,4 +13,9 @@ export const visitorRecord = (data: visitor) => {
 // 私信作者
 export const privateLetter = (data: { email: string; content: string }) => {
   return request.post<responseData>("/w1/sys/letter/create", data);
+};
+
+// 创建友链
+export const createFriendLink = (data: friendLink) => {
+  return request.post<responseData>("/w1/sys/friend/create", data);
 };
