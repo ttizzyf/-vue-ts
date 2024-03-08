@@ -38,7 +38,6 @@ export default {
       generateThemeColor("#2e050c", "#ffccd5", "#f50"),
       generateThemeColor("#210", "#f60", "#00ffff"),
       generateThemeColor("#444", "#eee", "#00ffff"),
-      generateThemeColor("#eef6f6", "black", "#0000ff"),
     ],
   },
 };

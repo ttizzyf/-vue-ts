@@ -43,18 +43,18 @@ import markdownItAbbr from "markdown-it-abbr";
 import markdownItMermaid from "@md-reader/markdown-it-mermaid";
 import hljs from "highlight.js";
 // 代码主题选择 https://highlightjs.org/static/demo/
-import "highlight.js/styles/github.css";
-import "highlight.js/styles/github-dark.css";
-import "highlight.js/styles/kimbie-light.css";
-import "highlight.js/styles/monokai.css";
-import "highlight.js/styles/purebasic.css";
-import "highlight.js/styles/school-book.css";
-import "highlight.js/styles/xcode.css";
+// import "highlight.js/styles/github.css";
+// import "highlight.js/styles/github-dark.css";
+// import "highlight.js/styles/kimbie-light.css";
+// import "highlight.js/styles/monokai.css";
+// import "highlight.js/styles/purebasic.css";
+// import "highlight.js/styles/school-book.css";
+// import "highlight.js/styles/xcode.css";
 import "highlight.js/styles/atom-one-dark.css";
-import "highlight.js/styles/brown-paper.css";
-import "highlight.js/styles/intellij-light.css";
-import "highlight.js/styles/gradient-light.css";
-import "highlight.js/styles/foundation.css";
+// import "highlight.js/styles/brown-paper.css";
+// import "highlight.js/styles/intellij-light.css";
+// import "highlight.js/styles/gradient-light.css";
+// import "highlight.js/styles/foundation.css";
 
 const props = defineProps({
   markdownContent: {

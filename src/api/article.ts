@@ -43,3 +43,7 @@ export const updateBlogCommentLikeOrOppose = (data: articleLikeType) => {
 export const getMessageList = (params: MessageListType) => {
   return request.get<responseData>("/w1/blog/blog_comment/Messagelist", params);
 };
+
+export const likeArticle = (data: { id: string }) => {
+  return request.post<responseData>("/w1/blog/blog_article/like", data);
+};

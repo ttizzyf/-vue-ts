@@ -19,3 +19,8 @@ export const privateLetter = (data: { email: string; content: string }) => {
 export const createFriendLink = (data: friendLink) => {
   return request.post<responseData>("/w1/sys/friend/create", data);
 };
+
+// 前台获取友链
+export const getAdminFriendList = () => {
+  return request.get<responseData>("/w1/sys/friend/adminList");
+};

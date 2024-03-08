@@ -187,7 +187,7 @@ watch(
             show-word-limit
           />
           <div
-            v-if="userStore.LoginInfo.roleInfo.roleAuth === 'SUPER-ADMIN'"
+            v-if="userStore.LoginInfo?.roleInfo.roleAuth === 'SUPER-ADMIN'"
             class="mt10 flex"
           >
             <span class="mr10 textColor">发送邮件:</span>
@@ -218,7 +218,7 @@ watch(
     <div class="comment-nested">
       <div
         class="reply-box mb20"
-        v-for="item in props.comment.replyInfo"
+        v-for="item in props.comment.replyInfo || props.comment.children"
         :key="item.messageId"
       >
         <div class="comment-inner-avatar pointer mr10">

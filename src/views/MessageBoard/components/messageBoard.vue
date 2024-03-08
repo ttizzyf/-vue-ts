@@ -10,7 +10,13 @@ import { commentItem } from "@/types/index";
 import { TimeUtils } from "@/utils/time";
 import { createCommentType } from "@/types/index";
 import { setCookie } from "@/utils/cookies.ts";
-import { WNotification } from "@/utils/toast";
+import { WMessage, WNotification } from "@/utils/toast";
+import { useMenusStore } from "@/store/menu";
+import { useUserStore } from "@/store/user";
+
+const menusStore = useMenusStore();
+
+const userStore = useUserStore();
 
 const messageList: Ref<Array<commentItem>> = ref([]);
 
@@ -82,6 +88,37 @@ const replyComment = async (info: createCommentType, faId: string) => {
   }
 };
 
+// 留言表单
+const commentContent = ref();
+
+const snedMessage = async () => {
+  if (!userStore.LoginInfo) {
+    WMessage.error("用户未登录,请先登录");
+    menusStore.changeDrawer();
+    return;
+  }
+  if (commentContent.value.length === 0) {
+    WMessage.error("评论内容不能为空");
+    return;
+  }
+  const res = await createComment({
+    content: commentContent.value,
+  });
+  if (res.data.status) {
+    console.log(res.data.data);
+    const message = await getMessageList({
+      pageSize: 1,
+      pageNum: 1,
+      messageId: res.data.data,
+    });
+    messageList.value.unshift(message.data.data.data[0]);
+    messageTotal.value++;
+    WMessage.success("感谢留下你的足迹");
+    commentContent.value = "";
+    return;
+  }
+};
+
 watch(
   messageListParams.value,
   () => {
@@ -98,6 +135,34 @@ watch(
         <i class="iconfont mr10">&#xe63e;</i>
         <span class="fz16">留下足迹</span>
         ( <i class="iconfont">&#xe608;</i> {{ messageTotal }} )
+      </div>
+      <div class="pb20">
+        <el-input
+          type="textarea"
+          placeholder="请输入评论内容"
+          v-model="commentContent"
+          maxlength="500"
+          show-word-limit
+          :rows="6"
+        >
+        </el-input>
+        <div class="mt20 center">
+          <div
+            @click="snedMessage"
+            :class="['animationBtn', 'pointer', { mr20: !userStore.LoginInfo }]"
+            style="width: 144px"
+          >
+            SEND
+          </div>
+          <div
+            v-if="!userStore.LoginInfo"
+            @click="menusStore.changeDrawer"
+            class="animationBtn pointer"
+            style="width: 144px"
+          >
+            LOGIN
+          </div>
+        </div>
       </div>
       <div class="message-list" v-if="messageList.length !== 0">
         <el-timeline>
@@ -128,6 +193,11 @@ watch(
 </template>
 
 <style lang="scss" scoped>
-.message-board-box {
+:deep(.el-textarea__inner) {
+  box-shadow: 0 0 90px #00000026;
+  -webkit-box-shadow: 0 0 90px rgba(0, 0, 0, 0.15);
+}
+.btnColor {
+  background-color: #fff;
 }
 </style>

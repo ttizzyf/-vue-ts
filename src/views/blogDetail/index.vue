@@ -5,6 +5,7 @@ import {
   getCommentsListByArticleId,
   createComment,
   updateBlogCommentLikeOrOppose,
+  likeArticle,
 } from "@/api/article.ts";
 import { ref, onMounted, Ref } from "vue";
 import { useRouter } from "vue-router";
@@ -16,7 +17,7 @@ import WCommentVue from "@/components/WComment.vue";
 import { commentItem, createCommentType } from "@/types/index.ts";
 import { useUserStore } from "@/store/user";
 import { WMessage, WNotification } from "@/utils/toast";
-import { setCookie } from "@/utils/cookies.ts";
+import { setCookie, getCookie } from "@/utils/cookies.ts";
 import { useEventListener } from "@vueuse/core";
 import { visitorRecord } from "@/api/common.ts";
 
@@ -151,6 +152,16 @@ const visitorRecordAPI = () => {
   visitorRecord(userInfo);
 };
 
+// 点赞文章
+const likeArticleAPI = async () => {
+  if (getCookie(`article-like-${articleId.value}`)) return;
+  const res = await likeArticle({ id: articleId.value });
+  if (res.data.status) {
+    setCookie(`article-like-${articleId.value}`, true, 30);
+    articleDetails.value.likeNum++;
+  }
+};
+
 onMounted(() => {
   articleId.value = router.currentRoute.value.params.id;
   articleCommentsParams.value.relatedArticleId = articleId.value;
@@ -225,10 +236,20 @@ onMounted(() => {
           }}
         </span>
         <div class="data">
-          <i class="iconfont mr5">&#xe663;</i>
-          <span class="mr10">{{ articleDetails?.viewNum || 0 }}</span>
-          <i class="iconfont mr5">&#xec8c;</i>
-          <span>{{ articleDetails?.likeNum || 0 }}</span>
+          <span class="pointer">
+            <i class="iconfont mr5">&#xe663;</i>
+            <span class="mr10">{{ articleDetails?.viewNum || 0 }}</span>
+          </span>
+          <span
+            @click="likeArticleAPI"
+            :class="[
+              'pointer',
+              { active: getCookie(`article-like-${articleId}`) },
+            ]"
+          >
+            <i class="iconfont mr5">&#xec8c;</i>
+            <span>{{ articleDetails?.likeNum || 0 }}</span>
+          </span>
         </div>
       </div>
       <div class="reship" v-if="articleDetails?.isReship === 1">
@@ -431,5 +452,8 @@ onMounted(() => {
       }
     }
   }
+}
+.active {
+  color: $primary;
 }
 </style>

@@ -102,9 +102,16 @@ watch(
         <WcreateFriend @layout="isOpenFriend = false"></WcreateFriend>
       </div>
       <div class="flex stripe-box">
-        <div>
-          <i class="setup-icon iconfont fz24 mr10">&#xe609;</i>
-        </div>
+        <el-popover placement="top-start" trigger="hover">
+          <template #reference>
+            <div>
+              <i class="setup-icon iconfont fz24 mr10 pointer">&#xe609;</i>
+            </div>
+          </template>
+          <div class="center pointer" @click="userStore.removeLogin">
+            退出登录
+          </div>
+        </el-popover>
         <div class="stripe"></div>
       </div>
     </el-drawer>

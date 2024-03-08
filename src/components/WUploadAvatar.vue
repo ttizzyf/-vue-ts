@@ -40,6 +40,7 @@ const fileList = ref();
     :headers="headers"
     action="/w1/w1/common/upload"
     :multiple="false"
+    :disabled="!userStore.LoginInfo"
     @success="uploadFileSuccess"
     @error="uploadFileError"
     :limit="1"
