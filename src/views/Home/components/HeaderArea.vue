@@ -24,7 +24,9 @@ const isHomePage = computed(() => {
 <template>
   <div class="mb20">
     <!-- 博客名称 -->
-    <div v-if="!isHomePage" class="BlogName mb20 caps">{{ BlogName }}</div>
+    <div v-if="!isHomePage" class="BlogName mb20 caps">
+      {{ menusStore.webSetting.footerFiling.auther || BlogName }}
+    </div>
     <!-- 博客菜单栏 -->
     <div class="tabsColumn">
       <i class="iconfont icon menuIcon pointer" @click="menusStore.changeDrawer"

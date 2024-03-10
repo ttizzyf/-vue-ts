@@ -87,8 +87,19 @@ onMounted(() => {
           </p>
           <div class="mt20 mb20">
             <p>站点名称:MaiXFBlog</p>
-            <p>站点链接:http://www.maixf.top/#/</p>
-            <p>简短描述:一个It技术的探索者</p>
+            <p>
+              站点链接:
+              {{
+                menusStore.webSetting.webInfo.webConnect ||
+                "http://www.maixf.top/#/"
+              }}
+            </p>
+            <p>
+              简短描述:{{
+                menusStore.webSetting.webInfo.webIntroduce ||
+                "一个It技术的探索者"
+              }}
+            </p>
           </div>
           <p>接入成功后将会以邮件的方式通知。</p>
         </div>

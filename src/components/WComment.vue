@@ -127,8 +127,7 @@ watch(
             {{ props.comment.userInfo.nickname }}
             <span
               v-if="
-                props.comment.userInfo.roleId ===
-                '037a2f7d-206b-4e26-8461-b518d83be6c5'
+                props.comment.userInfo['roleInfo.roleAuth'] === 'SUPER-ADMIN'
               "
             >
               <el-tag type="success" effect="dark" size="small" round>
@@ -228,12 +227,7 @@ watch(
           <div class="comment-content-author warp column start">
             <span class="textColor fw700 fz14 lh1 mb5">
               {{ item.userInfo.nickname }}
-              <span
-                v-if="
-                  item.userInfo.roleId ===
-                  '037a2f7d-206b-4e26-8461-b518d83be6c5'
-                "
-              >
+              <span v-if="item.userInfo['roleInfo.roleAuth'] === 'SUPER-ADMIN'">
                 <el-tag type="success" effect="dark" size="small" round>
                   管理员
                 </el-tag>
@@ -241,10 +235,7 @@ watch(
               @
               {{ item.toUserInfo.nickname }}
               <span
-                v-if="
-                  item.toUserInfo.roleId ===
-                  '037a2f7d-206b-4e26-8461-b518d83be6c5'
-                "
+                v-if="item.toUserInfo['roleInfo.roleAuth'] === 'SUPER-ADMIN'"
               >
                 <el-tag type="success" effect="dark" size="small" round>
                   管理员

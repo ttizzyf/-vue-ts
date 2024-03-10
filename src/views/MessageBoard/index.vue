@@ -3,8 +3,14 @@ import { ref } from "vue";
 import Wheader from "@/components/Wheader.vue";
 import privateLetter from "./components/privateLetter.vue";
 import messageBoard from "./components/messageBoard.vue";
+import { useMenusStore } from "@/store/menu";
+import WMarkdownRenderer from "@/components/WMarkdownRenderer.vue";
 
-const srcList = ref(["../../../public/wx.jpg"]);
+const menusStore = useMenusStore();
+
+const srcList = ref([menusStore.webSetting.webInfo.aboutWxUrl]);
+
+const defaultList = ref(["../../../public/wx.jpg"]);
 </script>
 
 <template>
@@ -19,21 +25,30 @@ const srcList = ref(["../../../public/wx.jpg"]);
             <i class="iconfont mr10">&#xe63e;</i>
             <span class="fz16">关于博主</span>
           </div>
-          <p>大家好,我是"MaiXF",是本站的作者</p>
-          <p>✒️ 2年前端开发工作经验</p>
-          <p>❤️ 热爱编程</p>
-          <p>✈️ 现居成都</p>
-          <p>有啥优化建议或者页面有bug可以反馈给我,联系方式见下方,感谢!</p>
-          <p>😸邮箱:1374144742@qq.com</p>
-          <p>😸留言:下方留言板</p>
+          <WMarkdownRenderer
+            v-if="menusStore.webSetting.webInfo.aboutMe"
+            :markdownContent="menusStore.webSetting.webInfo.aboutMe"
+          ></WMarkdownRenderer>
+          <div v-else>
+            <p>大家好,我是"MaiXF",是本站的作者</p>
+            <p>✒️ 2年前端开发工作经验</p>
+            <p>❤️ 热爱编程</p>
+            <p>✈️ 现居成都</p>
+            <p>有啥优化建议或者页面有bug可以反馈给我,联系方式见下方,感谢!</p>
+            <p>😸邮箱:1374144742@qq.com</p>
+            <p>😸留言:下方留言板</p>
+          </div>
           <div class="image center column mt16 mb16">
             <div class="mb16">如有需要,可通过下方扫码联系我!</div>
             <el-image
               fit="cover"
               style="width: 100px"
               :hide-on-click-modal="true"
-              :preview-src-list="srcList"
-              src="../../../public/wx.jpg"
+              :preview-src-list="srcList || defaultList"
+              :src="
+                menusStore.webSetting.webInfo.aboutWxUrl ||
+                '../../../public/wx.jpg'
+              "
               :initial-index="0"
               :zoom-rate="1.2"
               :max-scale="0.7"

@@ -1,10 +1,15 @@
 import setting from "@/setting";
 import { ref } from "vue";
+import { useMenusStore } from "@/store/menu";
+
+const menuStore = useMenusStore();
 
 // 主题切换逻辑
 let themeIndex = ref(0);
 
-let themeLength = ref(setting.theme.list.length);
+let themeLength = ref(
+  menuStore.webSetting.theme.length || setting.theme.list.length
+);
 
 const ChangeColor = () => {
   if (themeIndex.value >= themeLength.value - 1) {

@@ -5,6 +5,9 @@ import { useRouter } from "vue-router";
 import debounce from "lodash/throttle";
 import "element-plus/theme-chalk/display.css";
 import WSectionHeader from "@/components/WSectionHeader.vue";
+import { useMenusStore } from "@/store/menu.ts";
+
+const menusStore = useMenusStore();
 
 const router = useRouter();
 // 是否为处于首页
@@ -107,10 +110,12 @@ onMounted(() => {
         </div>
       </div>
       <div class="infoBox ml20 caps fw700 fz24">
-        <div class="name">{{ PostName }}</div>
+        <div class="name">
+          {{ menusStore.webSetting.footerFiling.auther || PostName }}
+        </div>
         <div class="fz14">
           <el-text class="saying" line-clamp="2">
-            {{ famousSaying }}
+            {{ menusStore.webSetting.webInfo.homeSaying || famousSaying }}
           </el-text>
         </div>
         <div class="iconBox flex">
@@ -145,14 +150,14 @@ onMounted(() => {
             >
               <template #reference>
                 <el-text line-clamp="1" class="skillName"
-                  >Vue、React、Node、Electron、React
-                  Native、THREE、WebRTC、WebGL、MySQL、HTTP、Uniapp、wx小程序、Linux、移动端适配、Markdown语法、Session、Cookie、Redis、Sequelize、Vite、Webpack
+                  >{{
+                    menusStore.webSetting.selfIntroduce.selfSkill || "vue React"
+                  }}
                 </el-text>
               </template>
-              <template #default
-                >Vue、React、Node、Electron、React
-                Native、THREE、WebRTC、WebGL、MySQL、HTTP、Uniapp、wx小程序、Linux、移动端适配、Markdown语法、Session、Cookie、Redis、Sequelize、Vite、Webpack</template
-              >
+              <template #default>{{
+                menusStore.webSetting.selfIntroduce.selfSkill || "vue React"
+              }}</template>
             </el-popover>
             <div class="line"></div>
             <div class="skill">个人技术栈</div>
@@ -167,12 +172,12 @@ onMounted(() => {
             >
               <template #reference>
                 <el-text line-clamp="1" class="skillName"
-                  >Vue3、TS、Node.js、Vite、Sequelize、Vite、Pinia、Mysql、Redis、Element-Plus
+                  >{{ menusStore.webSetting.selfIntroduce.webSkill || "vue" }}
                 </el-text>
               </template>
-              <template #default
-                >Vue3、TS、Node.js、Vite、Sequelize、Vite、Pinia、Mysql、Redis、Element-Plus</template
-              >
+              <template #default>{{
+                menusStore.webSetting.selfIntroduce.webSkill || "vue"
+              }}</template>
             </el-popover>
             <div class="line"></div>
             <div class="skill">本项目框架</div>
@@ -180,14 +185,16 @@ onMounted(() => {
         </el-col>
         <el-col :sm="12" :md="6" :lg="5">
           <div class="grid-item flex column experience pointer mb20">
-            <div>2+</div>
+            <div>{{ menusStore.webSetting.selfIntroduce.time || "vue" }}</div>
             <div class="line"></div>
             <div>实战经验</div>
           </div>
         </el-col>
         <el-col :sm="12" :md="6" :lg="5">
           <div class="grid-item project flex column pointer mb20">
-            <div>20+</div>
+            <div>
+              {{ menusStore.webSetting.selfIntroduce.projectNum || "vue" }}
+            </div>
             <div class="line"></div>
             <div>项目经验</div>
           </div>

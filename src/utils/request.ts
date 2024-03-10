@@ -2,8 +2,6 @@ import axios, { ResponseType, AxiosRequestConfig } from "axios";
 import Storage from "./storage.ts";
 import { WNotification } from "./toast";
 import { useUserStore } from "@/store/user.ts";
-const userStore = useUserStore();
-
 const Request = axios.create({
   // 基础路径到代理服务器被转换
   baseURL: "/w1",
@@ -40,6 +38,7 @@ Request.interceptors.response.use(
   (error) => {
     console.log(error);
     if (error.response.status === 401) {
+      const userStore = useUserStore();
       Storage.remove("userInfo");
       userStore.removeLogin();
     }

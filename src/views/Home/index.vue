@@ -5,6 +5,7 @@ import articleList from "./components/articleList.vue";
 import recentComments from "./components/recentComments.vue";
 import messageBoard from "./components/messageBoard.vue";
 import bottomArea from "./components/bottomArea.vue";
+import webFooter from "./components/webFooter.vue";
 import { visitorRecord } from "@/api/common.ts";
 import { onMounted } from "vue";
 import { useUserStore } from "@/store/user";
@@ -28,6 +29,7 @@ onMounted(() => {
     <recentComments></recentComments>
     <messageBoard></messageBoard>
     <bottomArea></bottomArea>
+    <webFooter></webFooter>
   </div>
 </template>
 

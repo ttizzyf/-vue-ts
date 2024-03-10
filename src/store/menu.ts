@@ -1,5 +1,6 @@
 import { ref } from "vue";
 import { defineStore } from "pinia";
+import { webSettingType } from "@/types/index";
 
 export const useMenusStore = defineStore("menus", () => {
   const page = ref("");
@@ -11,5 +12,29 @@ export const useMenusStore = defineStore("menus", () => {
   const changeDrawer = () => {
     isShowDrawer.value = true;
   };
-  return { isShowDrawer, changeDrawer, page, menuIndex };
+  // 网站设置
+  const webSetting = ref<webSettingType>({
+    footerFiling: {
+      auther: "",
+      authorizationUrl: "",
+      number: "",
+    },
+    selfIntroduce: {
+      projectNum: "",
+      selfSkill: "",
+      time: "",
+      webSkill: "",
+    },
+    theme: [],
+    webInfo: {
+      aboutMe: "",
+      aboutWxUrl: "",
+      webConnect: "",
+      webIntroduce: "",
+      homeSaying: "",
+      webName: "",
+      webVersion: "",
+    },
+  });
+  return { isShowDrawer, changeDrawer, page, menuIndex, webSetting };
 });

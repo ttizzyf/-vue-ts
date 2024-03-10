@@ -10,6 +10,7 @@ const articleData = ref({
   params: {
     pageSize: 4,
     pageNum: 1,
+    status: 1 as 1,
   },
   total: 0,
 });

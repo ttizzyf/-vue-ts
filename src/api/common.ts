@@ -1,5 +1,10 @@
 import request from "utils/request.ts";
-import { visitor, responseData, friendLink } from "@/types/index.ts";
+import {
+  visitor,
+  responseData,
+  friendLink,
+  webSettingType,
+} from "@/types/index.ts";
 // 文件上传
 export const uploadFile = (data: any) => {
   return request.post<responseData>("/w1/common/upload", data);
@@ -23,4 +28,9 @@ export const createFriendLink = (data: friendLink) => {
 // 前台获取友链
 export const getAdminFriendList = () => {
   return request.get<responseData>("/w1/sys/friend/adminList");
+};
+
+// 获取网站设置
+export const getWebSetting = () => {
+  return request.get<responseData<webSettingType>>("/w1/common/webSetting");
 };

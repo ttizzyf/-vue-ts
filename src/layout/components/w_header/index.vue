@@ -5,6 +5,9 @@ import ChangeColor from "libs/changeTheme.ts";
 // import W3dCardVue from "@/components/W3dAvatar.vue";
 import { useRouter } from "vue-router";
 import { isMobile } from "store/isMobile.ts";
+import { useMenusStore } from "@/store/menu";
+
+let menuStore = useMenusStore();
 const router = useRouter();
 const mobileWidth = isMobile();
 // blog版号
@@ -25,7 +28,9 @@ const isHomePage = computed(() => {
     <!-- 头部 -->
     <div v-if="!isHomePage" class="headerControl flex mt20 mb20">
       <div class="headerRight mr30"></div>
-      <div class="version pl20 pr20 ml30 caps fz12">{{ version }}</div>
+      <div class="version pl20 pr20 ml30 caps fz12">
+        {{ menuStore.webSetting.webInfo.webVersion || version }}
+      </div>
       <div
         v-if="!mobileWidth.isMobileTerminal || !isHomePage"
         class="ChangeColor ml20 pointer"

@@ -35,6 +35,7 @@ const articleListData: Ref<articleList> = ref({
   params: {
     pageSize: 10,
     pageNum: 1,
+    status: 1,
     category: "",
     title: "",
   },

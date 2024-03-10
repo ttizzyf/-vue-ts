@@ -22,3 +22,33 @@ export interface friendLinkItem {
   status: number;
   createdAt: string;
 }
+
+interface theme {
+  main: string;
+  primary: string;
+  seconed: string;
+}
+
+export interface webSettingType {
+  footerFiling: {
+    auther: string;
+    authorizationUrl: string;
+    number: string;
+  };
+  selfIntroduce: {
+    projectNum: string;
+    selfSkill: string;
+    time: string;
+    webSkill: string;
+  };
+  theme: Array<theme>;
+  webInfo: {
+    aboutMe: string;
+    aboutWxUrl: string;
+    webConnect: string;
+    webIntroduce: string;
+    homeSaying: string;
+    webName: string;
+    webVersion: string;
+  };
+}

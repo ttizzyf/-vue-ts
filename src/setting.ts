@@ -17,6 +17,17 @@ function generateThemeColor(
 }
 
 export default {
+  generateThemeColor: (
+    bg: string,
+    text: string,
+    primary: string
+  ): GenerateThemeColor => {
+    return {
+      bg: bg,
+      text: text,
+      primary: primary,
+    };
+  },
   // 网站信息
   websiteInfo: {
     name: "W·Admin",
