@@ -11,7 +11,9 @@ const jumpTo = (url: string) => {
     <div class="intro">
       <div class="tabsLine">
         <span class="caps mr20"> // </span>
-        <span class="nav pointer"> MANAGE </span>
+        <span class="nav pointer" @click="jumpTo('http://maixf.top:8002')">
+          MANAGE
+        </span>
         <span class="nav pointer" @click="jumpTo('https://github.com/ttizzyf')">
           GITHUB
         </span>

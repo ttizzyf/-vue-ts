@@ -2,9 +2,13 @@ import axios, { ResponseType, AxiosRequestConfig } from "axios";
 import Storage from "./storage.ts";
 import { WNotification } from "./toast";
 import { useUserStore } from "@/store/user.ts";
+
+let baseURL =
+  process.env.NODE_ENV === "development" ? "/w1" : "http://120.55.46.157:4089";
+
 const Request = axios.create({
   // 基础路径到代理服务器被转换
-  baseURL: "/w1",
+  baseURL,
   timeout: 60 * 1000,
 });
 // 请求拦截器，携带token

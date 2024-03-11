@@ -319,7 +319,7 @@ onMounted(() => {
           ></WCommentVue>
         </template>
         <div v-else class="empty-box flex column jcenter">
-          <img src="../../assets/imgs/empty.png" alt="" />
+          <img src="../../../public/empty.png" alt="" />
           <span>当前评论为空</span>
         </div>
       </div>

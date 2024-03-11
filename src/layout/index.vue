@@ -6,7 +6,10 @@ import WRightMenuList from "@/components/WRightMenuList.vue";
 import { Application } from "@splinetool/runtime";
 import { onMounted, onBeforeUnmount } from "vue";
 import { useRouter } from "vue-router";
+import { useLoadingStore } from "@/store/loading";
 const router = useRouter();
+
+const loadingStore = useLoadingStore();
 
 const watchScroll = () => {};
 
@@ -31,7 +34,7 @@ onBeforeUnmount(() => {
 <template>
   <div class="mainControl">
     <div class="canvas-box">
-      <canvas id="canvas3d"></canvas>
+      <canvas v-if="!loadingStore.loading" id="canvas3d"></canvas>
     </div>
     <div
       :class="[
