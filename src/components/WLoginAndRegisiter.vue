@@ -17,8 +17,8 @@ const svgState = ref({
 });
 
 const loginForm = ref({
-  email: "1374144742@qq.com",
-  password: "lcl17707145515",
+  email: "",
+  password: "",
   code: null,
 });
 

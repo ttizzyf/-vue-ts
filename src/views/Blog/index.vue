@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import Wheader from "@/components/Wheader.vue";
 import { getArticleList } from "@/api/home.ts";
-import { ref, watch, onMounted, computed, Ref } from "vue";
+import { ref, watch, onMounted, computed, Ref, nextTick } from "vue";
 import { articleItem, articleList } from "@/types";
 import { TimeUtils } from "@/utils/time";
 import { Search } from "@element-plus/icons-vue";
@@ -50,6 +50,7 @@ const switchCategory = (item: any) => {
   if (item.value === articleListData.value.params.category) return;
   articleListData.value.params.pageNum = 1;
   rotateValue.value = 0;
+  moveDistance.value = 0;
   articleListData.value.params.category = item.value;
   articleList.value = [];
 };
@@ -59,6 +60,9 @@ const getArticleListAPI = async () => {
   const res = await getArticleList(articleListData.value.params);
   articleList.value.push(...res.data.data.data);
   articleListData.value.total = res.data.data.count;
+  nextTick(() => {
+    listBoxHeight.value = listBox.value.offsetHeight;
+  });
 };
 
 // 圆形旋转角度
@@ -66,6 +70,12 @@ const rotateValue = ref(0);
 
 // 文章列表盒子dom元素
 const articleListBox = ref();
+
+// 盒子列表高度
+const listBox = ref();
+
+// // 盒子列表高度
+const listBoxHeight = ref(0);
 
 // 文章盒子的高度
 const articleListBoxHeight = ref();
@@ -93,6 +103,7 @@ const moveRange = ref();
 const seachArticleList = () => {
   articleListData.value.params.pageNum = 1;
   rotateValue.value = 0;
+  moveDistance.value = 0;
   articleList.value = [];
   articleListData.value.params.title = articleListData.value.searchData;
 };
@@ -133,8 +144,47 @@ const wheelEventHandler = (e: any) => {
 // 是否为小屏幕
 const smallScreenWidth = ref(window.innerWidth < 1140);
 
+// 移动距离
+
+// 初始移动距离
+const moveStart = ref(0);
+
+// 移动后的位置
+const moveEnd = ref(0);
+
+// 移动总距离
+const moveDistance = ref(0);
+
+const moveStartEventHandler = (e: any) => {
+  moveStart.value = e.changedTouches[0].clientY;
+};
+
+// 移动端使用tochmove事件
+const tochmoveEventHandler = (e: any) => {
+  moveEnd.value = e.changedTouches[0].clientY;
+  // 当移动距离大于盒子高度时，并且没有数据能加载，还往下移动被取消，只能往上移动
+  if (
+    -moveDistance.value * 2 >= listBoxHeight.value - 360 &&
+    articleList.value.length >= articleListData.value.total &&
+    moveEnd.value - moveStart.value < 0
+  )
+    return;
+  if (moveDistance.value > 0 && moveEnd.value - moveStart.value > 0) return;
+  moveDistance.value = moveDistance.value + (moveEnd.value - moveStart.value);
+  moveStart.value = e.changedTouches[0].clientY;
+  // 当移动到距离顶部360px时，加载下一页数据
+  let { pageNum, pageSize } = articleListData.value.params;
+  console.log();
+  if (
+    pageNum * pageSize <= articleListData.value.total &&
+    -rotateValue.value * 180 + moveDistance.value * 2 <
+      -listBoxHeight.value + 360
+  ) {
+    articleListData.value.params.pageNum++;
+  }
+};
+
 onMounted(() => {
-  console.log(smallScreenWidth.value);
   // 监测屏幕宽度
   useEventListener(window, "resize", () => {
     moveRange.value = articleListBox.value.offsetHeight / 3;
@@ -144,6 +194,8 @@ onMounted(() => {
   moveRange.value = articleListBox.value.offsetHeight / 3;
   articleListBoxHeight.value = articleListBox.value.offsetHeight;
   useEventListener(window, "wheel", wheelEventHandler);
+  useEventListener(window, "touchmove", tochmoveEventHandler);
+  useEventListener(window, "touchstart", moveStartEventHandler);
 });
 </script>
 
@@ -186,7 +238,7 @@ onMounted(() => {
         <div
           class="central-circle"
           :style="{
-            transform: `rotate(${rotateValue * 18}deg)`,
+            transform: `rotate(${smallScreenWidth ? moveDistance : rotateValue * 18}deg)`,
             height:`${moveRange * 3}px`,
             width:`${moveRange * 3}px`,
             right:`-${moveRange * 1.5}px`,
@@ -201,9 +253,12 @@ onMounted(() => {
         ></div>
         <div
           class="list-box flex column"
+          ref="listBox"
           :style="{
             transform: `translate(0, ${
-              smallScreenWidth ? -rotateValue * 180 : -rotateValue * moveRange
+              smallScreenWidth
+                ? -rotateValue * 180 + moveDistance * 2
+                : -rotateValue * moveRange
             }px)`,
           }"
         >

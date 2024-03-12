@@ -7,6 +7,7 @@ import { Application } from "@splinetool/runtime";
 import { onMounted, onBeforeUnmount } from "vue";
 import { useRouter } from "vue-router";
 import { useLoadingStore } from "@/store/loading";
+
 const router = useRouter();
 
 const loadingStore = useLoadingStore();

@@ -80,7 +80,7 @@ onMounted(() => {
           <img
             :src="
               userStore.LoginInfo?.avatar ||
-              '../../../../public/微信图片_20231214185224.jpg'
+              '../../../../public/defaultAvatar.png'
             "
             alt=""
           />

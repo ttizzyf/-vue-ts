@@ -52,7 +52,7 @@ const fileList = ref();
       :src="
         userStore.LoginInfo?.avatar
           ? userStore.LoginInfo.avatar
-          : '../../public/微信图片_20231214185224.jpg'
+          : '../../public/defaultAvatar.png'
       "
     />
   </el-upload>

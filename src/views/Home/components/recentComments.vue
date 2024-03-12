@@ -45,35 +45,37 @@ onMounted(() => {
   <div class="mb20">
     <WSectionHeader :title="'Recent Comments'"></WSectionHeader>
     <div class="comments-list-box">
-      <div
-        class="comments-item"
-        v-for="item in commentsListData.list"
-        @click="articleDetail(item.articleInfo.id)"
-        :key="item.messageId"
-      >
-        <div class="author flex">
-          <img :src="item.userInfo.avatar" alt="" />
-          <div class="userInfo">
-            <div class="name">{{ item.userInfo.nickname }}</div>
-            <div class="time">{{ item.createdAt }}</div>
+      <el-row :gutter="20">
+        <el-col
+          :xs="24"
+          :sm="8"
+          :md="8"
+          class="comments-item"
+          v-for="item in commentsListData.list"
+          @click="articleDetail(item.articleInfo.id)"
+          :key="item.messageId"
+        >
+          <div class="author flex">
+            <img :src="item.userInfo.avatar" alt="" />
+            <div class="userInfo">
+              <div class="name">{{ item.userInfo.nickname }}</div>
+              <div class="time">{{ item.createdAt }}</div>
+            </div>
           </div>
-        </div>
-        <div class="content-text">
-          <div class="content">{{ item.content }}</div>
-          <div class="article-info">发表在「{{ item.articleInfo.title }}」</div>
-        </div>
-      </div>
+          <div class="content-text">
+            <div class="content">{{ item.content }}</div>
+            <div class="article-info">
+              发表在「{{ item.articleInfo.title }}」
+            </div>
+          </div>
+        </el-col>
+      </el-row>
     </div>
   </div>
 </template>
 
 <style lang="scss" scoped>
 .comments-list-box {
-  display: flex;
-  flex-wrap: wrap;
-  @media screen and (max-width: 968px) {
-    flex-direction: column;
-  }
   .comments-item {
     font-size: 0.8rem;
     width: 33.3%;

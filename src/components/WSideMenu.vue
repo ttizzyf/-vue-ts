@@ -13,14 +13,18 @@ const moveIndex = ref();
 // 定义菜单项数据
 const menuItems = [
   { name: "HOME", id: "home", path: "/home", icon: "&#xe62c;" },
-  { name: "ABOUT", id: "about", path: "/about", icon: "&#xe941;" },
   { name: "BLOG", id: "blog", path: "/blog", icon: "&#xe643;" },
-  { name: "GAMES", id: "games", path: "/games", icon: "&#xe638;" },
   {
     name: "MESSAGEBOARD",
     id: "messageBoard",
     path: "/messageBoard",
     icon: "&#xe608;",
+  },
+  {
+    name: "FRIENDLINK",
+    id: "friendLink",
+    path: "/friendLink",
+    icon: "&#xeadc;",
   },
 ];
 

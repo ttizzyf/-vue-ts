@@ -85,10 +85,10 @@ const onCreate = () => {
           placeholder="请输入友链地址"
         ></el-input>
       </el-form-item>
-      <el-form-item label="地址" prop="link">
+      <el-form-item label="介绍" prop="link">
         <el-input
           v-model="friendLinkParams.describe"
-          placeholder="请输入友链地址"
+          placeholder="请输入网站介绍"
           type="textarea"
           rows="6"
         ></el-input>

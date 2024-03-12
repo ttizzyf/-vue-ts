@@ -21,12 +21,9 @@ const link = (url: string) => {
         >{{ menusStore.webSetting.footerFiling.number }}</span
       >
       |
-      <span class="pointer" @click="link('http://192.168.31.203:8002/#/login')"
+      <span class="pointer" @click="link('http://www.maixf.top:8002/home')"
         >主页管理页面👈</span
       >
-    </div>
-    <div class="copyright">
-      <img src="" alt="" />
     </div>
   </div>
 </template>
