@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import { useUserStore } from "store/user.ts";
 import { emitUserInfoAPI } from "api/user.ts";
 import { WMessage } from "@/utils/toast";
@@ -7,9 +7,9 @@ import "@/styles/index.scss";
 import { isMobile } from "store/isMobile.ts";
 const userStore = useUserStore();
 const mobile = isMobile();
-const headers = {
+const headers = ref({
   authorization: userStore.LoginInfo?.token,
-};
+});
 
 const avatarUrl = ref();
 
@@ -31,14 +31,28 @@ const uploadFileError = (data: any) => {
   WMessage.error(data.message);
 };
 
+let uploadUrl = ref(
+  process.env.NODE_ENV === "development"
+    ? "/w1/w1/common/upload"
+    : "http://www.maixf.top:4089/w1/common/upload"
+);
+
 const fileList = ref();
+
+watch(
+  () => userStore.LoginInfo?.token,
+  () => {
+    headers.value.authorization = userStore.LoginInfo?.token;
+  },
+  { immediate: true, deep: true }
+);
 </script>
 
 <template>
   <el-upload
     v-model:file-list="fileList"
     :headers="headers"
-    action="/w1/w1/common/upload"
+    :action="uploadUrl"
     :multiple="false"
     :disabled="!userStore.LoginInfo"
     @success="uploadFileSuccess"
@@ -52,7 +66,7 @@ const fileList = ref();
       :src="
         userStore.LoginInfo?.avatar
           ? userStore.LoginInfo.avatar
-          : '../../public/defaultAvatar.png'
+          : '../assets/imgs/defaultAvatar.png'
       "
     />
   </el-upload>

@@ -22,13 +22,13 @@ const friendList: Ref<Array<friendLinkItem>> = ref([]);
 
 // 图片列表地址
 const imgList = [
-  "../../../public/1.jpg",
-  "../../../public/2.jpg",
-  "../../../public/3.jpg",
-  "../../../public/4.jpg",
-  "../../../public/5.jpg",
-  "../../../public/6.jpg",
-  "../../../public/7.jpg",
+  "../../assets/imgs/1.jpg",
+  "../../assets/imgs/2.jpg",
+  "../../assets/imgs/3.jpg",
+  "../../assets/imgs/4.jpg",
+  "../../assets/imgs/5.jpg",
+  "../../assets/imgs/6.jpg",
+  "../../assets/imgs/7.jpg",
 ];
 
 // 获取前台友链列表

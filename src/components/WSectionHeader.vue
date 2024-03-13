@@ -62,7 +62,7 @@ const props = defineProps({
 }
 .bg-stripe {
   width: 256px;
-  background: url("../../public/stripe.svg") repeat 0 0;
+  background: url("../assets/imgs/stripe.svg") repeat 0 0;
   background-size: 16px;
   filter: drop-shadow($seconed 256px 0);
   transform: translateX(-256px);

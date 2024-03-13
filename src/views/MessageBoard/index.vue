@@ -10,7 +10,7 @@ const menusStore = useMenusStore();
 
 const srcList = ref([menusStore.webSetting.webInfo.aboutWxUrl]);
 
-const defaultList = ref(["../../../public/wx.jpg"]);
+const defaultList = ref(["../../assets/imgs/wx.jpg"]);
 </script>
 
 <template>
@@ -47,7 +47,7 @@ const defaultList = ref(["../../../public/wx.jpg"]);
               :preview-src-list="srcList || defaultList"
               :src="
                 menusStore.webSetting.webInfo.aboutWxUrl ||
-                '../../../public/wx.jpg'
+                '../../assets/imgs/wx.jpg'
               "
               :initial-index="0"
               :zoom-rate="1.2"

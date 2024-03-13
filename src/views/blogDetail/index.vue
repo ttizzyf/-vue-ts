@@ -319,7 +319,7 @@ onMounted(() => {
           ></WCommentVue>
         </template>
         <div v-else class="empty-box flex column jcenter">
-          <img src="../../../public/empty.png" alt="" />
+          <img src="../../assets/imgs/empty.png" alt="" />
           <span>当前评论为空</span>
         </div>
       </div>
@@ -389,7 +389,7 @@ onMounted(() => {
     }
     .stripe {
       width: 100%;
-      background: url("../../../public/stripe.svg") repeat 0 0;
+      background: url("../../assets/imgs/stripe.svg") repeat 0 0;
       background-size: 16px;
       padding: 16px;
     }

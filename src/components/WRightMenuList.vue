@@ -131,7 +131,7 @@ watch(
     }
     .stripe {
       width: 100%;
-      background: url("../../public/stripe.svg") repeat 0 0;
+      background: url("../assets/imgs/stripe.svg") repeat 0 0;
       background-size: 16px;
       padding: 16px;
     }

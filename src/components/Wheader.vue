@@ -15,7 +15,7 @@ const goHome = () => {
 
 <template>
   <div class="header-box">
-    <img class="image pointer" @click="goHome" src="../../public/head.png" />
+    <img class="image pointer" @click="goHome" src="../assets/imgs/head.png" />
     <el-scrollbar>
       <WMenuList ref="menulist"></WMenuList>
     </el-scrollbar>
