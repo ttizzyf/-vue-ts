@@ -16,7 +16,11 @@ const watchScroll = () => {};
 
 const getCanvas = () => {
   const canvas = document.getElementById("canvas3d");
-  if (canvas !== null && canvas instanceof HTMLCanvasElement) {
+  if (
+    canvas !== null &&
+    canvas instanceof HTMLCanvasElement &&
+    window.innerWidth >= 768
+  ) {
     const spline = new Application(canvas);
     spline.load("https://prod.spline.design/QtjyKwneLbc7H6gb/scene.splinecode");
   }

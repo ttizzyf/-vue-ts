@@ -61,13 +61,20 @@ watch(
     :show-file-list="false"
   >
     <el-avatar
+      v-if="userStore.LoginInfo?.avatar"
       :size="mobile.isMobileTerminal ? 50 : 80"
       class="pointer"
-      :src="
-        userStore.LoginInfo?.avatar
-          ? userStore.LoginInfo.avatar
-          : '../assets/imgs/defaultAvatar.png'
-      "
+      :src="userStore.LoginInfo?.avatar"
+    />
+    <img
+      v-else
+      :style="{
+        height: mobile.isMobileTerminal ? '50px' : '80px',
+        width: mobile.isMobileTerminal ? '50px' : '80px',
+      }"
+      class="cover bdrs"
+      src="../assets/imgs/defaultAvatar.png"
+      alt=""
     />
   </el-upload>
 </template>

@@ -21,7 +21,7 @@ const link = (url: string) => {
         >{{ menusStore.webSetting.footerFiling.number }}</span
       >
       |
-      <span class="pointer" @click="link('http://www.maixf.top:8002/home')"
+      <span class="pointer" @click="link('http://www.maixf.top:4089/manage')"
         >主页管理页面👈</span
       >
     </div>

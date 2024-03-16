@@ -1,33 +1,36 @@
 <template>
-  <section class="renderBox" :class="{ showTocA: showTocState }">
-    <ul class="renderToc">
-      <li class="title" @click="taggerToc">目录</li>
-      <li v-for="item in renderedMarkdownToc" :key="item.anchor">
-        <template v-if="item.children.length">
-          <p class="has-children" @click="scrollTo(item.anchor)">
-            - {{ item.titleText }}
-          </p>
-          <ul class="subToc">
-            <li
-              v-for="childItem in item.children"
-              :key="childItem.anchor"
-              @click="scrollTo(childItem.anchor)"
-            >
-              - {{ childItem.titleText }}
-            </li>
-          </ul>
-        </template>
-        <p class="toc-item" v-else @click="scrollTo(item.anchor)">
+  <ul v-if="showTocState" :class="['renderToc', { isSticky: isSticky }]">
+    <li class="title" @click="taggerToc">目录</li>
+    <li v-for="item in renderedMarkdownToc" :key="item.anchor">
+      <template v-if="item.children.length">
+        <p class="has-children" @click="scrollTo(item.anchor)">
           - {{ item.titleText }}
         </p>
-      </li>
-    </ul>
-    <section v-html="renderedMarkdown" id="custom-markdown"></section>
+        <ul class="subToc">
+          <li
+            v-for="childItem in item.children"
+            :key="childItem.anchor"
+            @click="scrollTo(childItem.anchor)"
+          >
+            - {{ childItem.titleText }}
+          </li>
+        </ul>
+      </template>
+      <p class="toc-item" v-else @click="scrollTo(item.anchor)">
+        - {{ item.titleText }}
+      </p>
+    </li>
+  </ul>
+  <section class="renderBox" :class="{ showTocA: showTocState }">
+    <div v-if="showTocState" class="maskBox"></div>
+    <div ref="markdownBox" class="markdown-box">
+      <section v-html="renderedMarkdown" id="custom-markdown"></section>
+    </div>
   </section>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, computed, watch, Ref } from "vue";
+import { ref, onMounted, computed, watch, Ref, nextTick } from "vue";
 import MarkdownIt from "markdown-it";
 import emoji from "markdown-it-emoji";
 import checkbox from "markdown-it-checkbox";
@@ -41,6 +44,7 @@ import markdownItContainer from "markdown-it-container";
 import markdownItAbbr from "markdown-it-abbr";
 // 流程图表文档： https://mermaid.js.org/syntax/classDiagram.html
 import markdownItMermaid from "@md-reader/markdown-it-mermaid";
+import { useEventListener } from "@vueuse/core";
 import hljs from "highlight.js";
 // 代码主题选择 https://highlightjs.org/static/demo/
 // import "highlight.js/styles/github.css";
@@ -98,7 +102,6 @@ const renderMarkdown = () => {
           }</code></pre>`;
         } catch (error) {}
       }
-
       return `<pre><code class="hljs">${encodeURIComponent(code)}</code></pre>`;
     },
   });
@@ -222,60 +225,87 @@ watch(
   () => props.markdownContent,
   () => {
     renderMarkdown();
+    nextTick(() => {
+      markdownBoxHeight.value = markdownBox.value.offsetHeight;
+      console.log(markdownBoxHeight.value);
+    });
   }
 );
 
+const markdownBox = ref();
+
+const markdownBoxHeight = ref(0);
+
+const scrollY = ref(0);
+
+const isSticky = computed(() => {
+  return scrollY.value > markdownBoxHeight.value + 180;
+});
+
 onMounted(() => {
+  useEventListener(window, "scroll", () => {
+    scrollY.value = window.scrollY;
+  });
   renderMarkdown();
 });
 </script>
 <style lang="scss">
+.isSticky {
+  transform: translate(0, -200px) !important;
+}
+.renderToc {
+  position: sticky;
+  left: 0px;
+  top: 60px;
+  transform: translate(0, 0px);
+  font-family: inherit;
+  z-index: 1;
+  width: 220px;
+  list-style-type: none;
+  border-radius: 8px;
+  overflow: hidden;
+  transition: all 0.2s linear;
+  ul {
+    padding: 0 !important;
+  }
+
+  li {
+    margin-bottom: 5px;
+    cursor: pointer;
+    transition: all 0.3s linear;
+    // overflow: hidden; //超出的文本隐藏
+    text-overflow: ellipsis; //溢出用省略号显示
+    white-space: nowrap; //溢出不换行
+    &:hover {
+      color: $primary;
+    }
+  }
+
+  .title {
+    color: $primary;
+    font-weight: bold;
+    border-bottom: 1px solid #d4d4d4;
+  }
+
+  .toc-item,
+  .has-children {
+    font-weight: bold;
+    overflow: hidden; //超出的文本隐藏
+    text-overflow: ellipsis; //溢出用省略号显示
+    white-space: nowrap; //溢出不换行
+    &:hover {
+      color: $primary;
+    }
+  }
+}
 /* 定义通用的颜色变量 */
 .renderBox {
   position: relative;
   display: flex;
-  .renderToc {
-    font-family: inherit;
-    z-index: 1;
-    width: 0;
-    max-width: 220px;
-    list-style-type: none;
-    border-radius: 8px;
-    overflow: hidden;
-    transition: all 0.2s linear;
 
-    ul {
-      padding: 0 !important;
-    }
-
-    li {
-      margin-bottom: 5px;
-      cursor: pointer;
-      transition: all 0.3s linear;
-      overflow: hidden; //超出的文本隐藏
-      text-overflow: ellipsis; //溢出用省略号显示
-      white-space: nowrap; //溢出不换行
-      &:hover {
-        color: $primary;
-      }
-    }
-
-    .title {
-      color: $primary;
-      font-weight: bold;
-      border-bottom: 1px solid #d4d4d4;
-    }
-
-    .toc-item,
-    .has-children {
-      font-weight: bold;
-      overflow: hidden; //超出的文本隐藏
-      text-overflow: ellipsis; //溢出用省略号显示
-      white-space: nowrap; //溢出不换行
-      &:hover {
-        color: $primary;
-      }
-    }
+  .maskBox {
+    height: 100vh;
+    min-width: 220px;
   }
 
   .subToc {
@@ -287,6 +317,9 @@ onMounted(() => {
     color: #333;
     font-size: 0.9rem;
   }
+}
+.markdown-box {
+  width: 100%;
 }
 
 /* 通用样式 */
@@ -530,7 +563,7 @@ onMounted(() => {
   #custom-markdown {
     box-sizing: border-box;
     transition: all 0.2s linear;
-    width: calc(100% - 220px);
+    width: 100%;
     padding-left: 20px;
   }
 }

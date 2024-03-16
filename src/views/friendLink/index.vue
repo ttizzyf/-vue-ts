@@ -6,6 +6,12 @@ import { useMenusStore } from "@/store/menu";
 import { useUserStore } from "@/store/user";
 import { getAdminFriendList } from "@/api/common.ts";
 import { friendLinkItem } from "@/types/common";
+import jpm1 from "@/assets/imgs/1.jpg";
+import jpm2 from "@/assets/imgs/2.jpg";
+import jpm3 from "@/assets/imgs/3.jpg";
+import jpm4 from "@/assets/imgs/4.jpg";
+import jpm5 from "@/assets/imgs/5.jpg";
+import jpm6 from "@/assets/imgs/6.jpg";
 
 const menusStore = useMenusStore();
 
@@ -13,23 +19,15 @@ const userStore = useUserStore();
 
 const router = useRouter();
 
+// 图片列表地址
+const imgList = ref([jpm1, jpm2, jpm3, jpm4, jpm5, jpm6]);
+
 const gotoMessage = () => {
   router.push("/messageBoard");
   menusStore.menuIndex = 2;
 };
 
 const friendList: Ref<Array<friendLinkItem>> = ref([]);
-
-// 图片列表地址
-const imgList = [
-  "../../assets/imgs/1.jpg",
-  "../../assets/imgs/2.jpg",
-  "../../assets/imgs/3.jpg",
-  "../../assets/imgs/4.jpg",
-  "../../assets/imgs/5.jpg",
-  "../../assets/imgs/6.jpg",
-  "../../assets/imgs/7.jpg",
-];
 
 // 获取前台友链列表
 const getAdminFriendListAPI = async () => {
@@ -117,11 +115,7 @@ onMounted(() => {
             <div class="friend-link-item flex column pointer">
               <div @click="jumpTo(item.link)" class="border-box center">
                 <div class="image-box center">
-                  <el-image
-                    style="width: 200px; height: 200px"
-                    :src="imgList[index]"
-                    fit="cover"
-                  />
+                  <img :src="imgList[index]" alt="" />
                 </div>
                 <div class="mask center">跳转</div>
                 <div class="border-right"></div>

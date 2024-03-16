@@ -405,6 +405,10 @@
     color: $primary !important;
   }
 }
+.cover {
+  overflow: hidden;
+  object-fit: cover;
+}
 
 // .lazy-image {
 //   transition: all 0.3s linear;

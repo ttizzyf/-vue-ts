@@ -5,12 +5,13 @@ import privateLetter from "./components/privateLetter.vue";
 import messageBoard from "./components/messageBoard.vue";
 import { useMenusStore } from "@/store/menu";
 import WMarkdownRenderer from "@/components/WMarkdownRenderer.vue";
+import wxImage from "@/assets/imgs/wx.jpg";
 
 const menusStore = useMenusStore();
 
 const srcList = ref([menusStore.webSetting.webInfo.aboutWxUrl]);
 
-const defaultList = ref(["../../assets/imgs/wx.jpg"]);
+const defaultList = ref([wxImage]);
 </script>
 
 <template>
@@ -45,10 +46,7 @@ const defaultList = ref(["../../assets/imgs/wx.jpg"]);
               style="width: 100px"
               :hide-on-click-modal="true"
               :preview-src-list="srcList || defaultList"
-              :src="
-                menusStore.webSetting.webInfo.aboutWxUrl ||
-                '../../assets/imgs/wx.jpg'
-              "
+              :src="menusStore.webSetting.webInfo.aboutWxUrl || wxImage"
               :initial-index="0"
               :zoom-rate="1.2"
               :max-scale="0.7"

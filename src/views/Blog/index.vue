@@ -161,6 +161,7 @@ const moveStartEventHandler = (e: any) => {
 
 // 移动端使用tochmove事件
 const tochmoveEventHandler = (e: any) => {
+  console.log(e)
   moveEnd.value = e.changedTouches[0].clientY;
   // 当移动距离大于盒子高度时，并且没有数据能加载，还往下移动被取消，只能往上移动
   if (

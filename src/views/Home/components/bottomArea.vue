@@ -13,7 +13,7 @@ const jumpTo = (url: string) => {
         <span class="caps mr20"> // </span>
         <span
           class="nav pointer"
-          @click="jumpTo('http://www.maixf.top:8002/home')"
+          @click="jumpTo('http://www.maixf.top:4089/manage')"
         >
           MANAGE
         </span>

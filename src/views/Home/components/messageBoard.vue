@@ -9,6 +9,7 @@ import { useMenusStore } from "@/store/menu";
 import { WMessage } from "@/utils/toast";
 import { createComment } from "@/api/article.ts";
 import { useUserStore } from "@/store/user";
+import defaultAvatar from "@/assets/imgs/defaultAvatar.png";
 
 const menusStore = useMenusStore();
 
@@ -77,14 +78,7 @@ onMounted(() => {
     <div class="message-list-box">
       <div class="message-from">
         <div class="userInfo-header flex">
-          <img
-            :src="
-              userStore.LoginInfo?.avatar ||
-              '../../../../public/defaultAvatar.png'
-            "
-            alt=""
-          />
-
+          <img :src="userStore.LoginInfo?.avatar || defaultAvatar" alt="" />
           <div class="userInfo">
             <div class="name">
               {{ userStore.LoginInfo?.nickname || "未登录" }}
